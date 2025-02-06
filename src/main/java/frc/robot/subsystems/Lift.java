@@ -15,22 +15,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
-public class FourBar extends SubsystemBase {
+public class Lift extends SubsystemBase {
   private SparkMax m_right;
   private RelativeEncoder m_rightEncoder;
   private SparkClosedLoopController m_rightPID;
   private double position = 0;
   
   private SparkMax m_left;
-  /** Creates a new fourbar. */
-  public FourBar() {
-    m_right = new SparkMax(Constants.FourBarConstants.kRightCANid, Constants.FourBarConstants.kRightMotorType);
-    m_right.configure(Configs.FourBar.rightConfig, 
+  /** Creates a new Lift. */
+  public Lift() {
+    m_right = new SparkMax(Constants.LiftConstants.kRightCANid, Constants.LiftConstants.kRightMotorType);
+    m_right.configure(Configs.Lift.rightConfig, 
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    m_left = new SparkMax(Constants.FourBarConstants.kLeftCANid, Constants.FourBarConstants.kLeftMotorType);
-    m_left.configure(Configs.FourBar.leftConfig, 
+    m_left = new SparkMax(Constants.LiftConstants.kLeftCANid, Constants.LiftConstants.kLeftMotorType);
+    m_left.configure(Configs.Lift.leftConfig, 
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 

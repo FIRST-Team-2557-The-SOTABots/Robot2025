@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -22,6 +24,65 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final class LiftConstants{
+    public static final int kRightCANid = 60;
+    public static final int kLeftCANid = 61;
+
+    public static final MotorType kRightMotorType = MotorType.kBrushless;
+    public static final MotorType kLeftMotorType = MotorType.kBrushless;
+
+    public static final boolean kRightInverted = false;
+    public static final boolean kLeftInverted = false;
+
+    public static final int kRightCurrentLimit = 50;
+    public static final int kLeftCurrentLimit = 50;
+
+    public static final double kLiftP = 0.5;
+    public static final double kLiftI = 0.0;
+    public static final double kLiftD = 0.0;
+
+    public static final double kLiftGearRatio = 5.4;
+
+  }
+
+  public static final class FourBarConstants{
+    public static final int kRightCANid = 17;
+    public static final int kLeftCANid = 18;
+
+    public static final MotorType kRightMotorType = MotorType.kBrushless;
+    public static final MotorType kLeftMotorType = MotorType.kBrushless;
+
+    public static final boolean kRightInverted = true;
+    public static final boolean kLeftInverted = false;
+
+    public static final int kRightCurrentLimit = 50;
+    public static final int kLeftCurrentLimit = 50;
+
+    public static final double kFourBarP = 3;
+    public static final double kFourBarI = 0.0;
+    public static final double kFourBarD = 0.0;
+
+  }
+
+  public static final class IntakeConstants{
+    public static final int kRightCANid = 57;
+    public static final int kLeftCANid = 58;
+
+    public static final MotorType kRightMotorType = MotorType.kBrushless;
+    public static final MotorType kLeftMotorType = MotorType.kBrushless;
+
+    public static final boolean kRightInverted = false;
+    public static final boolean kLeftInverted = false;
+
+    public static final int kRightCurrentLimit = 50;
+    public static final int kLeftCurrentLimit = 50;
+
+    public static final double kIntakeP = 0.5;
+    public static final double kIntakeI = 0.0;
+    public static final double kIntakeD = 0.0;
+
+  }
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds

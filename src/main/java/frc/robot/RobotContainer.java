@@ -18,8 +18,9 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.drive.RotateToAprilTag;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FourBar;
+import frc.robot.subsystems.Lift;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -27,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.apriltag.AprilTag;
 import frc.robot.Commands.Drive.MoveToAprilTag;
+import frc.robot.subsystems.Intake;
+
 import java.util.List;
 
 /*
@@ -39,9 +42,13 @@ public class RobotContainer {
 
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Intake m_intake = new Intake();
+  private final FourBar m_fourBar = new FourBar();
+  private final Lift m_lift = new Lift();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_manipulatorController = new XboxController(1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -49,6 +56,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    m_fourBar.setDefaultCommand(new RunCommand(
+        () -> m_fourBar.setPostion(0.9),
+        m_fourBar));
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -73,11 +84,23 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+
+    new JoystickButton(m_driverController, Button.kLeftBumper.value)
+        .whileTrue(new RunCommand(
+            () -> m_lift.setPostion(100),
+            m_lift));
+
+    new JoystickButton(m_driverController, Button.kA.value)
+        .whileTrue(new RunCommand(
+            () -> {m_fourBar.setPostion(0.8);
+                m_intake.setSpeed(1000,1000);},
+            m_fourBar, m_intake));
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

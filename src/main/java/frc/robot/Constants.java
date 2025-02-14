@@ -26,8 +26,8 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static final class LiftConstants{
-    public static final int kRightCANid = 60;
-    public static final int kLeftCANid = 61;
+    public static final int kRightCANid = 13;
+    public static final int kLeftCANid = 14;
 
     public static final MotorType kRightMotorType = MotorType.kBrushless;
     public static final MotorType kLeftMotorType = MotorType.kBrushless;
@@ -38,26 +38,22 @@ public final class Constants {
     public static final int kRightCurrentLimit = 50;
     public static final int kLeftCurrentLimit = 50;
 
-    public static final double kLiftP = 0.5;
+    public static final double kLiftP = .03;
     public static final double kLiftI = 0.0;
     public static final double kLiftD = 0.0;
 
-    public static final double kLiftGearRatio = 5.4;
+    public static final double kLiftGearRatio = 1;
 
   }
 
   public static final class FourBarConstants{
     public static final int kRightCANid = 17;
-    public static final int kLeftCANid = 18;
 
     public static final MotorType kRightMotorType = MotorType.kBrushless;
-    public static final MotorType kLeftMotorType = MotorType.kBrushless;
 
     public static final boolean kRightInverted = true;
-    public static final boolean kLeftInverted = false;
 
     public static final int kRightCurrentLimit = 50;
-    public static final int kLeftCurrentLimit = 50;
 
     public static final double kFourBarP = 3;
     public static final double kFourBarI = 0.0;
@@ -66,8 +62,8 @@ public final class Constants {
   }
 
   public static final class IntakeConstants{
-    public static final int kRightCANid = 57;
-    public static final int kLeftCANid = 58;
+    public static final int kRightCANid = 15;
+    public static final int kLeftCANid = 16;
 
     public static final MotorType kRightMotorType = MotorType.kBrushless;
     public static final MotorType kLeftMotorType = MotorType.kBrushless;
@@ -78,7 +74,7 @@ public final class Constants {
     public static final int kRightCurrentLimit = 50;
     public static final int kLeftCurrentLimit = 50;
 
-    public static final double kIntakeP = 0.5;
+    public static final double kIntakeP = 0.01;
     public static final double kIntakeI = 0.0;
     public static final double kIntakeD = 0.0;
 

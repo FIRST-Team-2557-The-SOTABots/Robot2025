@@ -45,8 +45,10 @@ public class Intake extends SubsystemBase {
   }
 
   public void setSpeed(double rightSpeed, double leftSpeed) {
-    this.rightSpeed = rightSpeed;
-    this.leftSpeed = leftSpeed;
+    m_left.set(leftSpeed);
+    m_right.set(rightSpeed);
+    // this.rightSpeed = rightSpeed;
+    // this.leftSpeed = leftSpeed;
   }
 
 
@@ -54,8 +56,8 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_leftPID.setReference(leftSpeed, ControlType.kVelocity);
-    m_rightPID.setReference(rightSpeed, ControlType.kVelocity);
+    // m_leftPID.setReference(leftSpeed, ControlType.kVelocity);
+    // m_rightPID.setReference(rightSpeed, ControlType.kVelocity);
     // This method will be called once per scheduler run
   }
 }

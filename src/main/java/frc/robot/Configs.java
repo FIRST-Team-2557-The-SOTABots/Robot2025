@@ -26,21 +26,27 @@ public final class Configs {
                                 .pid(Constants.LiftConstants.kLiftP,
                                 Constants.LiftConstants.kLiftI,
                                 Constants.LiftConstants.kLiftD)
-                                .positionWrappingEnabled(true)
                                 .outputRange(-1, 1);
 
                         leftConfig
                                 .idleMode(IdleMode.kBrake)
                                 .inverted(Constants.LiftConstants.kLeftInverted)
-                                .smartCurrentLimit(Constants.LiftConstants.kLeftCurrentLimit)
-                                .follow(Constants.LiftConstants.kRightCANid);
+                                .smartCurrentLimit(Constants.LiftConstants.kLeftCurrentLimit);
+                        leftConfig.encoder
+                                .positionConversionFactor(Constants.LiftConstants.kLiftGearRatio)
+                                .velocityConversionFactor(Constants.LiftConstants.kLiftGearRatio/60);
+                        leftConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                .pid(Constants.LiftConstants.kLiftP,
+                                Constants.LiftConstants.kLiftI,
+                                Constants.LiftConstants.kLiftD)
+                                .outputRange(-1, 1);
                 }
         }
 
 
         public static final class FourBar {
                 public static final SparkMaxConfig rightConfig = new SparkMaxConfig();
-                public static final SparkMaxConfig leftConfig = new SparkMaxConfig();
 
                 static {
                         rightConfig
@@ -56,12 +62,6 @@ public final class Configs {
                                 Constants.FourBarConstants.kFourBarI,
                                 Constants.FourBarConstants.kFourBarD)
                                 .outputRange(-1, 1);
-
-                        leftConfig
-                                .idleMode(IdleMode.kBrake)
-                                .inverted(Constants.FourBarConstants.kLeftInverted)
-                                .smartCurrentLimit(Constants.FourBarConstants.kLeftCurrentLimit)
-                                .follow(Constants.FourBarConstants.kRightCANid);
                 }
         }
 

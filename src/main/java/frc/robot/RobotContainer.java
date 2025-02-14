@@ -58,7 +58,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     m_fourBar.setDefaultCommand(new RunCommand(
-        () -> m_fourBar.setPostion(0.9),
+        () -> m_fourBar.setPostion(0.38),
         m_fourBar));
 
     // Configure default commands
@@ -90,15 +90,43 @@ public class RobotContainer {
             m_robotDrive));
 
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
-        .whileTrue(new RunCommand(
+        .onTrue(new RunCommand(
             () -> m_lift.setPostion(100),
             m_lift));
 
     new JoystickButton(m_driverController, Button.kA.value)
-        .whileTrue(new RunCommand(
-            () -> {m_fourBar.setPostion(0.8);
-                m_intake.setSpeed(1000,1000);},
-            m_fourBar, m_intake));
+        .onTrue(new RunCommand(
+            () -> {m_fourBar.setPostion(0.655);
+                m_intake.setSpeed(-.5,.5);},
+            m_fourBar, m_intake))
+        .onFalse(Commands.runOnce(
+            () -> m_intake.setSpeed(0, 0), 
+            m_intake));
+
+    new JoystickButton(m_driverController, Button.kB.value)
+        .onTrue(new RunCommand(
+            () -> {m_fourBar.setPostion(0.62);
+                m_intake.setSpeed(-.2,.3);},
+                m_fourBar, m_intake))
+        .onFalse(Commands.runOnce(
+            () -> m_intake.setSpeed(-.2, .2), 
+                m_intake));
+
+    new JoystickButton(m_driverController, Button.kY.value)
+        .onTrue(Commands.runOnce(
+            () -> m_lift.setPostion(24), 
+            m_lift))
+            .onFalse(Commands.runOnce(
+                () -> m_lift.setPostion(.5), 
+                m_lift));
+
+    new JoystickButton(m_driverController, Button.kX.value)
+        .onTrue(Commands.runOnce(
+            () -> m_lift.setPostion(15), 
+            m_lift))
+            .onFalse(Commands.runOnce(
+                () -> m_lift.setPostion(.5), 
+                m_lift));
   }
 
 

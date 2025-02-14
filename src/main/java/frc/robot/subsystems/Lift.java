@@ -22,6 +22,7 @@ public class Lift extends SubsystemBase {
   private double position = 0;
   
   private SparkMax m_left;
+  private SparkClosedLoopController m_leftPID;
   /** Creates a new Lift. */
   public Lift() {
     m_right = new SparkMax(Constants.LiftConstants.kRightCANid, Constants.LiftConstants.kRightMotorType);
@@ -36,6 +37,8 @@ public class Lift extends SubsystemBase {
 
     m_rightEncoder = m_right.getEncoder();
     m_rightPID = m_right.getClosedLoopController();
+
+    m_leftPID = m_left.getClosedLoopController();
   }
 
   public void setPostion(double position) {
@@ -44,6 +47,7 @@ public class Lift extends SubsystemBase {
 
   @Override
   public void periodic() {
+    m_leftPID.setReference(position, ControlType.kPosition);
     m_rightPID.setReference(position, ControlType.kPosition);
     // This method will be called once per scheduler run
   }

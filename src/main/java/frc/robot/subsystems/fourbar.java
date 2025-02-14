@@ -11,31 +11,25 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
 public class FourBar extends SubsystemBase {
-  private SparkMax m_right;
-  private RelativeEncoder m_rightEncoder;
-  private SparkClosedLoopController m_rightPID;
+  private SparkMax m_motor;
+  private RelativeEncoder m_motorEncoder;
+  private SparkClosedLoopController m_motorPID;
   private double position = 0;
-  
-  private SparkMax m_left;
   /** Creates a new fourbar. */
   public FourBar() {
-    m_right = new SparkMax(Constants.FourBarConstants.kRightCANid, Constants.FourBarConstants.kRightMotorType);
-    m_right.configure(Configs.FourBar.rightConfig, 
+    m_motor = new SparkMax(Constants.FourBarConstants.kRightCANid, Constants.FourBarConstants.kRightMotorType);
+    m_motor.configure(Configs.FourBar.rightConfig, 
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    m_left = new SparkMax(Constants.FourBarConstants.kLeftCANid, Constants.FourBarConstants.kLeftMotorType);
-    m_left.configure(Configs.FourBar.leftConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
-
-    m_rightEncoder = m_right.getEncoder();
-    m_rightPID = m_right.getClosedLoopController();
+    m_motorEncoder = m_motor.getEncoder();
+    m_motorPID = m_motor.getClosedLoopController();
   }
 
   public void setPostion(double position) {
@@ -44,7 +38,7 @@ public class FourBar extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_rightPID.setReference(position, ControlType.kPosition);
+    m_motorPID.setReference(position, ControlType.kPosition);
     // This method will be called once per scheduler run
   }
 }

@@ -44,6 +44,13 @@ public final class Constants {
 
     public static final double kLiftGearRatio = 1;
 
+    public final class LiftHeight{
+      public static final double kPositionResting = 0.2;
+      public static final double kPositionL2 = 0.8;
+      public static final double kPositionL3 = 0.8;
+      public static final double kPositionL4 = 0.8;
+    }
+
   }
 
   public static final class FourBarConstants{
@@ -58,6 +65,12 @@ public final class Constants {
     public static final double kFourBarP = 3;
     public static final double kFourBarI = 0.0;
     public static final double kFourBarD = 0.0;
+
+    public final class FourBarPostion{
+      public static final double kPositionResting = 0.2;
+      public static final double kPositionCoral = 0.2;
+      public static final double kPositionAlgae = 0.2;
+    }
 
   }
 
@@ -135,6 +148,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kManipulatorControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
   }
 

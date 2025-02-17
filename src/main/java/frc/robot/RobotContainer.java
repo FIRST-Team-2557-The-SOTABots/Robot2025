@@ -48,7 +48,7 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-  XboxController m_manipulatorController = new XboxController(1);
+  XboxController m_manipulatorController = new XboxController(OIConstants.kManipulatorControllerPort);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -60,6 +60,10 @@ public class RobotContainer {
     m_fourBar.setDefaultCommand(new RunCommand(
         () -> m_fourBar.setPostion(0.38),
         m_fourBar));
+    
+    m_lift.setDefaultCommand(new RunCommand(
+        () -> m_lift.setPostion(.2),
+        m_lift));
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(

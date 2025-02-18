@@ -44,23 +44,63 @@ public final class Configs {
                 }
         }
 
-
-        public static final class FourBar {
-                public static final SparkMaxConfig rightConfig = new SparkMaxConfig();
+        public static final class Outake {
+                public static final SparkFlexConfig motorConfig = new SparkFlexConfig();
 
                 static {
-                        rightConfig
+                        motorConfig
                                 .idleMode(IdleMode.kBrake)
-                                .inverted(Constants.FourBarConstants.kRightInverted)
-                                .smartCurrentLimit(Constants.FourBarConstants.kRightCurrentLimit);
-                        rightConfig.encoder
+                                .inverted(Constants.OutakeConstants.kInverted)
+                                .smartCurrentLimit(Constants.OutakeConstants.kCurrentLimit);
+                        motorConfig.encoder
+                                .positionConversionFactor(Constants.OutakeConstants.kOutakeGearRatio)
+                                .velocityConversionFactor(Constants.OutakeConstants.kOutakeGearRatio/60);
+                        motorConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                .pid(Constants.OutakeConstants.kOutakeP,
+                                Constants.OutakeConstants.kOutakeI,
+                                Constants.OutakeConstants.kOutakeD)
+                                .outputRange(-1, 1);
+                }
+        }
+
+
+        public static final class FourBar {
+                public static final SparkMaxConfig motorConfig = new SparkMaxConfig();
+
+                static {
+                        motorConfig
+                                .idleMode(IdleMode.kBrake)
+                                .inverted(Constants.FourBarConstants.kInverted)
+                                .smartCurrentLimit(Constants.FourBarConstants.kCurrentLimit);
+                        motorConfig.encoder
                                 .positionConversionFactor(1)
                                 .velocityConversionFactor(1);
-                        rightConfig.closedLoop
+                        motorConfig.closedLoop
                                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                                 .pid(Constants.FourBarConstants.kFourBarP,
                                 Constants.FourBarConstants.kFourBarI,
                                 Constants.FourBarConstants.kFourBarD)
+                                .outputRange(-1, 1);
+                }
+        }
+
+        public static final class Wrist {
+                public static final SparkMaxConfig motorConfig = new SparkMaxConfig();
+
+                static {
+                        motorConfig
+                                .idleMode(IdleMode.kBrake)
+                                .inverted(Constants.WristConstants.kInverted)
+                                .smartCurrentLimit(Constants.WristConstants.kCurrentLimit);
+                        motorConfig.encoder
+                                .positionConversionFactor(1)
+                                .velocityConversionFactor(1);
+                        motorConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                .pid(Constants.WristConstants.kWristP,
+                                Constants.WristConstants.kWristI,
+                                Constants.WristConstants.kWristD)
                                 .outputRange(-1, 1);
                 }
         }

@@ -23,6 +23,7 @@ public class Lift extends SubsystemBase {
   
   private SparkMax m_left;
   private SparkClosedLoopController m_leftPID;
+  private RelativeEncoder m_leftEncoder;
   /** Creates a new Lift. */
   public Lift() {
     m_right = new SparkMax(Constants.LiftConstants.kRightCANid, Constants.LiftConstants.kRightMotorType);
@@ -38,11 +39,20 @@ public class Lift extends SubsystemBase {
     m_rightEncoder = m_right.getEncoder();
     m_rightPID = m_right.getClosedLoopController();
 
+    m_leftEncoder = m_left.getEncoder();
     m_leftPID = m_left.getClosedLoopController();
   }
 
   public void setPostion(double position) {
     this.position = position;
+  }
+
+  public void setZero() {
+    while(m_right.getBusVoltage() < Constants.LiftConstants.kZeroTolerance) {
+      position = m_rightEncoder.getPosition() - Constants.WristConstants.kZeroSpeed;
+    }
+    m_rightEncoder.setPosition(0);
+    m_leftEncoder.setPosition(0);
   }
 
   @Override

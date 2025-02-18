@@ -11,20 +11,19 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
-public class FourBar extends SubsystemBase {
+public class Wrist extends SubsystemBase {
   private SparkMax m_motor;
   private RelativeEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
   private double position = 0;
-  /** Creates a new fourbar. */
-  public FourBar() {
-    m_motor = new SparkMax(Constants.FourBarConstants.kMotorCANid, Constants.FourBarConstants.kMotorType);
-    m_motor.configure(Configs.FourBar.motorConfig, 
+  /** Creates a new Wrist. */
+  public Wrist() {
+    m_motor = new SparkMax(Constants.WristConstants.kMotorCANid, Constants.WristConstants.kMotorType);
+    m_motor.configure(Configs.Wrist.motorConfig, 
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
@@ -32,7 +31,14 @@ public class FourBar extends SubsystemBase {
     m_motorPID = m_motor.getClosedLoopController();
   }
 
-  public void setPostion(double position) {
+  public void setZero() {
+    while(m_motor.getBusVoltage() < Constants.WristConstants.kZeroTolerance) {
+      position = m_motorEncoder.getPosition() - Constants.WristConstants.kZeroSpeed;
+    }
+    m_motorEncoder.setPosition(0);
+  }
+
+  public void setSpeed(double position) {
     this.position = position;
   }
 

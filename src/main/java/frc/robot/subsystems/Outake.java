@@ -11,20 +11,19 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
-public class FourBar extends SubsystemBase {
+public class Outake extends SubsystemBase {
   private SparkMax m_motor;
-  private RelativeEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
-  private double position = 0;
-  /** Creates a new fourbar. */
-  public FourBar() {
-    m_motor = new SparkMax(Constants.FourBarConstants.kMotorCANid, Constants.FourBarConstants.kMotorType);
-    m_motor.configure(Configs.FourBar.motorConfig, 
+  private RelativeEncoder m_motorEncoder;
+  private double speed = 0;
+  /** Creates a new Outake. */
+  public Outake() {
+    m_motor = new SparkMax(Constants.OutakeConstants.kMotorCANid, Constants.OutakeConstants.kMotorType);
+    m_motor.configure(Configs.Outake.motorConfig, 
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
@@ -32,13 +31,15 @@ public class FourBar extends SubsystemBase {
     m_motorPID = m_motor.getClosedLoopController();
   }
 
-  public void setPostion(double position) {
-    this.position = position;
+  public void setPostion(double speed) {
+    this.speed = speed;
   }
+
+  
 
   @Override
   public void periodic() {
-    m_motorPID.setReference(position, ControlType.kPosition);
+    m_motorPID.setReference(speed, ControlType.kVelocity);
     // This method will be called once per scheduler run
   }
 }

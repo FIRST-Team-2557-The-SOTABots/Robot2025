@@ -26,8 +26,8 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static final class LiftConstants{
-    public static final int kRightCANid = 13;
-    public static final int kLeftCANid = 14;
+    public static final int kRightCANid = 12;
+    public static final int kLeftCANid = 13;
 
     public static final MotorType kRightMotorType = MotorType.kBrushless;
     public static final MotorType kLeftMotorType = MotorType.kBrushless;
@@ -51,16 +51,43 @@ public final class Constants {
       public static final double kPositionL4 = 0.8;
     }
 
+    public static final double kZeroSpeed = 0.01;
+    public static final double kZeroTolerance = 10;
+    
+  }
+  
+  public static final class WristConstants{
+    public static final int kMotorCANid = 14;
+
+    public static final MotorType kMotorType = MotorType.kBrushless;
+
+    public static final boolean kInverted = true;
+
+    public static final int kCurrentLimit = 50;
+
+    public static final double kWristP = 3;
+    public static final double kWristI = 0.0;
+    public static final double kWristD = 0.0;
+
+    public final class WristPostion{
+      public static final double kPositionResting = 0.2;
+      public static final double kPositionCoral = 0.2;
+      public static final double kPositionAlgae = 0.2;
+    }
+    
+    public static final double kZeroSpeed = 0.01;
+    public static final double kZeroTolerance = 10;
+
   }
 
   public static final class FourBarConstants{
-    public static final int kRightCANid = 17;
+    public static final int kMotorCANid = 9;
 
-    public static final MotorType kRightMotorType = MotorType.kBrushless;
+    public static final MotorType kMotorType = MotorType.kBrushless;
 
-    public static final boolean kRightInverted = true;
+    public static final boolean kInverted = true;
 
-    public static final int kRightCurrentLimit = 50;
+    public static final int kCurrentLimit = 50;
 
     public static final double kFourBarP = 3;
     public static final double kFourBarI = 0.0;
@@ -74,9 +101,26 @@ public final class Constants {
 
   }
 
+  public static final class OutakeConstants{
+    public static final int kMotorCANid = 15;
+
+    public static final MotorType kMotorType = MotorType.kBrushless;
+
+    public static final boolean kInverted = true;
+
+    public static final int kCurrentLimit = 50;
+
+    public static final double kOutakeGearRatio = 1;
+
+    public static final double kOutakeP = 3;
+    public static final double kOutakeI = 0.0;
+    public static final double kOutakeD = 0.0;
+
+  }
+
   public static final class IntakeConstants{
-    public static final int kRightCANid = 15;
-    public static final int kLeftCANid = 16;
+    public static final int kRightCANid = 10;
+    public static final int kLeftCANid = 11;
 
     public static final MotorType kRightMotorType = MotorType.kBrushless;
     public static final MotorType kLeftMotorType = MotorType.kBrushless;

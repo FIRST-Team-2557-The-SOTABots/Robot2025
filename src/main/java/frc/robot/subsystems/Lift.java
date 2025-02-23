@@ -11,6 +11,9 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
@@ -18,11 +21,10 @@ import frc.robot.Constants;
 public class Lift extends SubsystemBase {
   private SparkMax m_right;
   private RelativeEncoder m_rightEncoder;
-  private SparkClosedLoopController m_rightPID;
-  private double position = 0;
+  private PIDController m_PID;
+  private double position;
   
   private SparkMax m_left;
-  private SparkClosedLoopController m_leftPID;
   private RelativeEncoder m_leftEncoder;
   /** Creates a new Lift. */
   public Lift() {
@@ -36,29 +38,53 @@ public class Lift extends SubsystemBase {
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    m_rightEncoder = m_right.getEncoder();
-    m_rightPID = m_right.getClosedLoopController();
+    m_PID = new PIDController(Constants.LiftConstants.kLiftLowP, 
+    Constants.LiftConstants.kLiftI,
+    Constants.LiftConstants.kLiftD);
+  }
 
-    m_leftEncoder = m_left.getEncoder();
-    m_leftPID = m_left.getClosedLoopController();
+  public void setVoltage(double voltage){
+    m_left.set(voltage);
+    m_right.set(voltage);
+  }
+
+  public boolean isInPostion() {
+    return (m_right.getEncoder().getPosition() < 3);
   }
 
   public void setPostion(double position) {
+    if (position < m_right.getEncoder().getPosition()){
+      m_PID.setP(Constants.LiftConstants.kLiftLowP);
+      m_PID.setI(0);
+    } else {
+      m_PID.setP(Constants.LiftConstants.kLiftHighP);
+      m_PID.setI(Constants.LiftConstants.kLiftI);
+    }
     this.position = position;
   }
 
   public void setZero() {
-    while(m_right.getBusVoltage() < Constants.LiftConstants.kZeroTolerance) {
-      position = m_rightEncoder.getPosition() - Constants.WristConstants.kZeroSpeed;
-    }
-    m_rightEncoder.setPosition(0);
-    m_leftEncoder.setPosition(0);
+    // while(m_right.getBusVoltage() < Constants.LiftConstants.kZeroTolerance) {
+    //   position = m_rightEncoder.getPosition() - Constants.WristConstants.kZeroSpeed;
+    // }
+    // m_rightEncoder.setPosition(0);
+    // m_leftEncoder.setPosition(0);
   }
 
   @Override
   public void periodic() {
-    m_leftPID.setReference(position, ControlType.kPosition);
-    m_rightPID.setReference(position, ControlType.kPosition);
+    m_right.set(m_PID.calculate(m_right.getEncoder().getPosition(), position));
+    m_left.set(m_PID.calculate(m_right.getEncoder().getPosition(), position));
+    SmartDashboard.putNumber("lift PID", m_PID.calculate(m_right.getEncoder().getPosition(), position));
+    SmartDashboard.putNumber("lift setpoint", position);
+    SmartDashboard.putNumber("lift postion", m_right.getEncoder().getPosition());
+    //SmartDashboard.putNumber("lift MP", m_right.GET());
+    SmartDashboard.putNumber("lift P", m_PID.getP());
+    SmartDashboard.putNumber("period", m_PID.getPeriod());
+    
+
+    SmartDashboard.putNumber("lift error", m_PID.getError());
+    SmartDashboard.putNumber("lift error acc", m_PID.getAccumulatedError());
     // This method will be called once per scheduler run
   }
 }

@@ -19,9 +19,12 @@ public class Wrist extends SubsystemBase {
   private SparkMax m_motor;
   private RelativeEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
-  private double position = 0;
+  private double position;
+  private Lift m_lift;
+  
   /** Creates a new Wrist. */
-  public Wrist() {
+  public Wrist(Lift m_lift) {
+    this.m_lift = m_lift;
     m_motor = new SparkMax(Constants.WristConstants.kMotorCANid, Constants.WristConstants.kMotorType);
     m_motor.configure(Configs.Wrist.motorConfig, 
       ResetMode.kResetSafeParameters,
@@ -33,12 +36,17 @@ public class Wrist extends SubsystemBase {
 
   public void setZero() {
     while(m_motor.getBusVoltage() < Constants.WristConstants.kZeroTolerance) {
-      position = m_motorEncoder.getPosition() - Constants.WristConstants.kZeroSpeed;
+      position = m_motorEncoder.getPosition() + Constants.WristConstants.kZeroSpeed;
     }
     m_motorEncoder.setPosition(0);
   }
 
-  public void setSpeed(double position) {
+  public void setSpeed(double speed){
+    m_motor.set(speed);
+  }
+
+  public void setPosition(double position){
+    if (m_lift.isInPostion())
     this.position = position;
   }
 

@@ -21,12 +21,15 @@ public final class Configs {
                         rightConfig.encoder
                                 .positionConversionFactor(Constants.LiftConstants.kLiftGearRatio)
                                 .velocityConversionFactor(Constants.LiftConstants.kLiftGearRatio/60);
-                        rightConfig.closedLoop
-                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                .pid(Constants.LiftConstants.kLiftP,
-                                Constants.LiftConstants.kLiftI,
-                                Constants.LiftConstants.kLiftD)
-                                .outputRange(-1, 1);
+                        // rightConfig.closedLoop
+                        //         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        //         .pid(Constants.LiftConstants.kLiftP,
+                        //         Constants.LiftConstants.kLiftI,
+                        //         Constants.LiftConstants.kLiftD)
+                        //         .outputRange(-1, 1);
+                        // rightConfig.closedLoop.maxMotion
+                        //         .maxAcceleration(2)
+                        //         .maxVelocity(5);
 
                         leftConfig
                                 .idleMode(IdleMode.kBrake)
@@ -35,12 +38,15 @@ public final class Configs {
                         leftConfig.encoder
                                 .positionConversionFactor(Constants.LiftConstants.kLiftGearRatio)
                                 .velocityConversionFactor(Constants.LiftConstants.kLiftGearRatio/60);
-                        leftConfig.closedLoop
-                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                .pid(Constants.LiftConstants.kLiftP,
-                                Constants.LiftConstants.kLiftI,
-                                Constants.LiftConstants.kLiftD)
-                                .outputRange(-1, 1);
+                        // leftConfig.closedLoop
+                        //         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        //         .pid(Constants.LiftConstants.kLiftP,
+                        //         Constants.LiftConstants.kLiftI,
+                        //         Constants.LiftConstants.kLiftD)
+                        //         .outputRange(-1, 1);
+                        // leftConfig.closedLoop.maxMotion
+                        //         .maxAcceleration(2)
+                        //         .maxVelocity(5);
                 }
         }
 
@@ -102,6 +108,17 @@ public final class Configs {
                                 Constants.WristConstants.kWristI,
                                 Constants.WristConstants.kWristD)
                                 .outputRange(-1, 1);
+                }
+        }
+
+        public static final class Climber {
+                public static final SparkMaxConfig motorConfig = new SparkMaxConfig();
+
+                static {
+                        motorConfig
+                                .idleMode(IdleMode.kBrake)
+                                .inverted(Constants.ClimberConstants.kMotorInverted)
+                                .smartCurrentLimit(Constants.ClimberConstants.kMotorCurrentLimmit);
                 }
         }
 

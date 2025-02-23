@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -18,7 +19,7 @@ import frc.robot.Constants;
 
 public class FourBar extends SubsystemBase {
   private SparkMax m_motor;
-  private RelativeEncoder m_motorEncoder;
+  private AbsoluteEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
   private double position = 0;
   /** Creates a new fourbar. */
@@ -28,12 +29,20 @@ public class FourBar extends SubsystemBase {
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    m_motorEncoder = m_motor.getEncoder();
+    m_motorEncoder = m_motor.getAbsoluteEncoder();
     m_motorPID = m_motor.getClosedLoopController();
   }
 
   public void setPostion(double position) {
     this.position = position;
+  }
+
+  public double getPostion(){
+    return m_motorEncoder.getPosition();
+  }
+
+  public boolean isResting(){
+    return getPostion() < Constants.FourBarConstants.FourBarPostion.kPositionResting;
   }
 
   @Override

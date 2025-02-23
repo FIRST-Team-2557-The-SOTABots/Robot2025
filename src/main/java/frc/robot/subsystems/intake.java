@@ -11,20 +11,18 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   private SparkMax m_right;
-  private RelativeEncoder m_rightEncoder;
-  private SparkClosedLoopController m_rightPID;
-  
   private SparkMax m_left;
-  private RelativeEncoder m_leftEncoder;
-  private SparkClosedLoopController m_leftPID;
 
-  private double rightSpeed, leftSpeed;
+  private DigitalInput proxSensor;
   /** Creates a new intake. */
   public Intake() {
     m_right = new SparkMax(Constants.IntakeConstants.kRightCANid, Constants.IntakeConstants.kRightMotorType);
@@ -37,27 +35,20 @@ public class Intake extends SubsystemBase {
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    m_rightEncoder = m_right.getEncoder();
-    m_leftEncoder = m_left.getEncoder();
-
-    m_rightPID = m_right.getClosedLoopController();
-    m_leftPID = m_left.getClosedLoopController();
+    proxSensor = new DigitalInput(8);
   }
 
-  public void setSpeed(double rightSpeed, double leftSpeed) {
-    m_left.set(leftSpeed);
-    m_right.set(rightSpeed);
-    // this.rightSpeed = rightSpeed;
-    // this.leftSpeed = leftSpeed;
+  public boolean hasCoral(){
+    return !proxSensor.get();
   }
 
-
-
+  public void setVoltage(double rightSpeed, double leftSpeed) {
+    m_left.setVoltage(leftSpeed);
+    m_right.setVoltage(rightSpeed);
+  }
 
   @Override
   public void periodic() {
-    // m_leftPID.setReference(leftSpeed, ControlType.kVelocity);
-    // m_rightPID.setReference(rightSpeed, ControlType.kVelocity);
-    // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Intake has Coral", hasCoral());
   }
 }

@@ -11,15 +11,17 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
 public class Outake extends SubsystemBase {
   private SparkMax m_motor;
-  private SparkClosedLoopController m_motorPID;
-  private RelativeEncoder m_motorEncoder;
   private double speed = 0;
+  private DigitalInput m_limitswitch;
   /** Creates a new Outake. */
   public Outake() {
     m_motor = new SparkMax(Constants.OutakeConstants.kMotorCANid, Constants.OutakeConstants.kMotorType);
@@ -27,19 +29,21 @@ public class Outake extends SubsystemBase {
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    m_motorEncoder = m_motor.getEncoder();
-    m_motorPID = m_motor.getClosedLoopController();
+    m_limitswitch = new DigitalInput(9);
   }
 
-  public void setPostion(double speed) {
-    this.speed = speed;
+  public void setVoltage(double speed) {
+    m_motor.setVoltage(speed);
   }
 
+  public boolean hasCoral(){
+    return m_limitswitch.get();
+  }
   
 
   @Override
   public void periodic() {
-    m_motorPID.setReference(speed, ControlType.kVelocity);
+    SmartDashboard.putBoolean("outake has coral", hasCoral());
     // This method will be called once per scheduler run
   }
 }

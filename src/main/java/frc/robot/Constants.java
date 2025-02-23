@@ -35,8 +35,8 @@ public final class Constants {
     public static final boolean kRightInverted = false;
     public static final boolean kLeftInverted = false;
 
-    public static final int kRightCurrentLimit = 50;
-    public static final int kLeftCurrentLimit = 50;
+    public static final int kRightCurrentLimit = 70;
+    public static final int kLeftCurrentLimit = 70;
 
     public static final double kLiftHighP = .05;
     public static final double kLiftLowP = 0.001;

@@ -18,37 +18,32 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
-public class Intake extends SubsystemBase {
-  private SparkMax m_right;
-  private SparkMax m_left;
-
-  private DigitalInput proxSensor;
-  /** Creates a new intake. */
-  public Intake() {
-    m_right = new SparkMax(Constants.IntakeConstants.kRightCANid, Constants.IntakeConstants.kRightMotorType);
-    m_right.configure(Configs.Intake.rightConfig, 
+public class Outake extends SubsystemBase {
+  private SparkMax m_motor;
+  private double speed = 0;
+  private DigitalInput m_limitswitch;
+  /** Creates a new Outake. */
+  public Outake() {
+    m_motor = new SparkMax(Constants.OutakeConstants.kMotorCANid, Constants.OutakeConstants.kMotorType);
+    m_motor.configure(Configs.Outake.motorConfig, 
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    m_left = new SparkMax(Constants.IntakeConstants.kLeftCANid, Constants.IntakeConstants.kLeftMotorType);
-    m_left.configure(Configs.Intake.leftConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_limitswitch = new DigitalInput(9);
+  }
 
-    proxSensor = new DigitalInput(8);
+  public void setVoltage(double speed) {
+    m_motor.setVoltage(speed);
   }
 
   public boolean hasCoral(){
-    return !proxSensor.get();
+    return m_limitswitch.get();
   }
-
-  public void setVoltage(double rightSpeed, double leftSpeed) {
-    m_left.setVoltage(leftSpeed);
-    m_right.setVoltage(rightSpeed);
-  }
+  
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Intake has Coral", hasCoral());
+    SmartDashboard.putBoolean("outake has coral", hasCoral());
+    // This method will be called once per scheduler run
   }
 }

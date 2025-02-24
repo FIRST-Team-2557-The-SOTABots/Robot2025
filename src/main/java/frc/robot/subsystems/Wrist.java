@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -12,37 +11,43 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
-public class FourBar extends SubsystemBase {
+public class Wrist extends SubsystemBase {
   private SparkMax m_motor;
-  private AbsoluteEncoder m_motorEncoder;
+  private RelativeEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
-  private double position = 0;
-  /** Creates a new fourbar. */
-  public FourBar() {
-    m_motor = new SparkMax(Constants.FourBarConstants.kMotorCANid, Constants.FourBarConstants.kMotorType);
-    m_motor.configure(Configs.FourBar.motorConfig, 
+  private double position;
+  private Lift m_lift;
+  
+  /** Creates a new Wrist. */
+  public Wrist(Lift m_lift) {
+    this.m_lift = m_lift;
+    m_motor = new SparkMax(Constants.WristConstants.kMotorCANid, Constants.WristConstants.kMotorType);
+    m_motor.configure(Configs.Wrist.motorConfig, 
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    m_motorEncoder = m_motor.getAbsoluteEncoder();
+    m_motorEncoder = m_motor.getEncoder();
     m_motorPID = m_motor.getClosedLoopController();
   }
 
-  public void setPostion(double position) {
+  public void setZero() {
+    while(m_motor.getBusVoltage() < Constants.WristConstants.kZeroTolerance) {
+      position = m_motorEncoder.getPosition() + Constants.WristConstants.kZeroSpeed;
+    }
+    m_motorEncoder.setPosition(0);
+  }
+
+  public void setSpeed(double speed){
+    m_motor.set(speed);
+  }
+
+  public void setPosition(double position){
+    if (m_lift.isInPostion())
     this.position = position;
-  }
-
-  public double getPostion(){
-    return m_motorEncoder.getPosition();
-  }
-
-  public boolean isResting(){
-    return getPostion() < Constants.FourBarConstants.FourBarPostion.kPositionResting;
   }
 
   @Override

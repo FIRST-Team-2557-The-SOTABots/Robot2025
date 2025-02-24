@@ -39,7 +39,7 @@ public final class Constants {
     public static final int kLeftCurrentLimit = 70;
 
     public static final double kLiftHighP = .05;
-    public static final double kLiftLowP = 0.001;
+    public static final double kLiftLowP = 0.005;
     public static final double kLiftI = .5;
     public static final double kLiftD = 0.0;
 
@@ -51,7 +51,7 @@ public final class Constants {
       public static final double kPositionL2 = 6;
       public static final double kPositionL3 = 13;
       public static final double kPositionL4 = 24;
-      public static final double kPositionCoralStation = 8.5;
+      public static final double kPositionCoralStation =7;
     }
 
     public static final double kZeroSpeed = 0.01;

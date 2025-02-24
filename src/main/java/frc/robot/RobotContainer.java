@@ -188,13 +188,13 @@ public class RobotContainer {
             //     m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting);},
             //     m_wrist,m_lift));
 
-        new JoystickButton(m_manipulatorController, Button.kB.value)
-            .onTrue(Commands.runOnce(
-                () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL4),
-                m_lift))
-            .onFalse( new RunCommand(
-                () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
-                m_lift));
+        // new JoystickButton(m_manipulatorController, Button.kB.value)
+        //     .onTrue(Commands.runOnce(
+        //         () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL4),
+        //         m_lift))
+        //     .onFalse( new RunCommand(
+        //         () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
+        //         m_lift));
 
         // new JoystickButton(m_manipulatorController, Button.kX.value)
         //     .onTrue(new RunCommand(
@@ -203,6 +203,14 @@ public class RobotContainer {
         //     .onFalse( new RunCommand(
         //         () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
         //         m_lift));
+
+        new JoystickButton(m_manipulatorController, Button.kB.value)
+        .onTrue(new LiftAndWristMove(m_lift, m_wrist, 
+            Constants.LiftConstants.LiftHeight.kPositionCoralStation,
+            Constants.WristConstants.WristPostion.kPositionResting))
+        .onFalse(new LiftAndWristMove(m_lift, m_wrist, 
+            Constants.LiftConstants.LiftHeight.kPositionResting,
+            Constants.WristConstants.WristPostion.kPositionResting));
 
         new JoystickButton(m_manipulatorController, Button.kY.value)
             .onTrue(new LiftAndWristMove(m_lift, m_wrist, 
@@ -248,10 +256,10 @@ public class RobotContainer {
 //             () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL2), 
 //             m_lift));
 
-//     new JoystickButton(m_manipulatorController, Button.kB.value)
-//         .onTrue(new RunCommand(
-//             () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL4),
-//                 m_lift));
+    new JoystickButton(m_manipulatorController, Button.kStart.value)
+        .onTrue(Commands.runOnce(
+            () -> m_lift.resetLift(),
+                m_lift));
   }
 
 
@@ -261,43 +269,45 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
+    // // Create config for trajectory
+    // TrajectoryConfig config = new TrajectoryConfig(
+    //     AutoConstants.kMaxSpeedMetersPerSecond,
+    //     AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+    //     // Add kinematics to ensure max speed is actually obeyed
+    //     .setKinematics(DriveConstants.kDriveKinematics);
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        config);
+    // // An example trajectory to follow. All units in meters.
+    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    //     // Start at the origin facing the +X direction
+    //     new Pose2d(0, 0, new Rotation2d(0)),
+    //     // Pass through these two interior waypoints, making an 's' curve path
+    //     List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+    //     // End 3 meters straight ahead of where we started, facing forward
+    //     new Pose2d(3, 0, new Rotation2d(0)),
+    //     config);
 
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    // var thetaController = new ProfiledPIDController(
+    //     AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    // thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
+    // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+    //     exampleTrajectory,
+    //     m_robotDrive::getPose, // Functional interface to feed supplier
+    //     DriveConstants.kDriveKinematics,
 
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
+    //     // Position controllers
+    //     new PIDController(AutoConstants.kPXController, 0, 0),
+    //     new PIDController(AutoConstants.kPYController, 0, 0),
+    //     thetaController,
+    //     m_robotDrive::setModuleStates,
+    //     m_robotDrive);
 
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+    // // Reset odometry to the starting pose of the trajectory.
+    // m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
 
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    // // Run path following command, then stop at the end.
+    // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+
+    return new RunCommand(() -> m_robotDrive.drive(-.5,0,0,true),m_robotDrive).withTimeout(1.5);
   }
 }

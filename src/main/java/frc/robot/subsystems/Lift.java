@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -71,10 +72,22 @@ public class Lift extends SubsystemBase {
     // m_leftEncoder.setPosition(0);
   }
 
+  public double getOutput(){
+    if ((position < m_right.getEncoder().getPosition() + 1) && (position > m_right.getEncoder().getPosition() - 1)){
+      return .1;
+    } else {
+      return m_PID.calculate(m_right.getEncoder().getPosition(), position);
+    }
+  }
+
+  public void resetLift(){
+    m_right.getEncoder().setPosition(0);
+  }
+
   @Override
   public void periodic() {
-    m_right.set(m_PID.calculate(m_right.getEncoder().getPosition(), position));
-    m_left.set(m_PID.calculate(m_right.getEncoder().getPosition(), position));
+    m_right.set(MathUtil.clamp(getOutput(), -.3, .3));
+    m_left.set(MathUtil.clamp(getOutput(), -.3, .3));
     SmartDashboard.putNumber("lift PID", m_PID.calculate(m_right.getEncoder().getPosition(), position));
     SmartDashboard.putNumber("lift setpoint", position);
     SmartDashboard.putNumber("lift postion", m_right.getEncoder().getPosition());

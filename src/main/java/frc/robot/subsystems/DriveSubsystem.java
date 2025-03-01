@@ -75,8 +75,8 @@ public class DriveSubsystem extends SubsystemBase {
   private static final InterpolatingMatrixTreeMap<Double, N3, N1> MEASUREMENT_STD_DEV_DISTANCE_MAP = new InterpolatingMatrixTreeMap<>();
 
   static {
-    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(1.5, 1.5, 999999.0)); //n1 and n2 are for x and y, n3 is for angle
-    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(8.0, VecBuilder.fill(10.0, 10.0, 999999.0)); 
+    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(3, 3, 999999.0)); //n1 and n2 are for x and y, n3 is for angle
+    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(8.0, VecBuilder.fill(7.0, 7.0, 999999.0)); 
   }
 
   SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -90,7 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
       },
       new Pose2d(),
       VecBuilder.fill(0.1, 0.1, Math.toRadians(5)), // State standard deviations
-      VecBuilder.fill(.7, .7, 9999999) // Vision standard deviations
+      VecBuilder.fill(5, 5, 9999999) // Vision standard deviations
   );
   RobotConfig config;
 
@@ -184,9 +184,10 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     if (!doRejectUpdate) {
-      //Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(Arrays.stream(input.distancesToTargets).min());
+      Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
       m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
       m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      SmartDashboard.putNumber("distance", mt2.avgTagDist);
     }
   }
 

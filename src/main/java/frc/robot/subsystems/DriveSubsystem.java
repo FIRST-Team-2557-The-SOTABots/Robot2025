@@ -72,27 +72,27 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
-  SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
-        DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(-m_gyro.getYaw()),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        },
-        new Pose2d(),
-        VecBuilder.fill(0.1, 0.1, Math.toRadians(5)),  // State standard deviations
-        VecBuilder.fill(0.9, 0.9, Math.toRadians(10))  // Vision standard deviations
-    );
-
   private static final InterpolatingMatrixTreeMap<Double, N3, N1> MEASUREMENT_STD_DEV_DISTANCE_MAP = new InterpolatingMatrixTreeMap<>();
 
   static {
-    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(1.5, 1.5,999999999.0));
-    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(8.0, VecBuilder.fill(10.0, 10.0, 999999999.0));
+    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(1.5, 1.5, 999999.0)); //n1 and n2 are for x and y, n3 is for angle
+    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(8.0, VecBuilder.fill(10.0, 10.0, 999999.0)); 
   }
-      RobotConfig config;
+
+  SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
+      DriveConstants.kDriveKinematics,
+      Rotation2d.fromDegrees(-m_gyro.getYaw()),
+      new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()
+      },
+      new Pose2d(),
+      VecBuilder.fill(0.1, 0.1, Math.toRadians(5)), // State standard deviations
+      VecBuilder.fill(.7, .7, 9999999) // Vision standard deviations
+  );
+  RobotConfig config;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -101,8 +101,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Load the RobotConfig from the GUI settings. You should probably
     // store this in your Constants file
 
-
-    try{
+    try {
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
       // Handle exception as needed
@@ -111,43 +110,48 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Configure AutoBuilder last
     AutoBuilder.configure(
-      this::getPose, // Robot pose supplier
-      this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-      this::getDriveOdom, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-      (speeds, feedforwards) -> drivePathplanner(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-      new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-      ),
-      config, // The robot configuration
+        this::getPose, // Robot pose supplier
+        this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getDriveOdom, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        (speeds, feedforwards) -> drivePathplanner(speeds), // Method that will drive the robot given ROBOT RELATIVE
+                                                            // ChassisSpeeds. Also optionally outputs individual module
+                                                            // feedforwards
+        new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic
+                                        // drive trains
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+        ),
+        config, // The robot configuration
         () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            this // Reference to this subsystem to set requirements
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this // Reference to this subsystem to set requirements
     );
 
   }
 
-  public ChassisSpeeds getDriveOdom(){
-   return DriveConstants.kDriveKinematics.toChassisSpeeds(
-      new SwerveModuleState[] {
-        m_frontLeft.getState(),
-        m_frontRight.getState(),
-        m_rearLeft.getState(),
-        m_rearRight.getState()
-    });
+  public ChassisSpeeds getDriveOdom() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(
+        new SwerveModuleState[] {
+            m_frontLeft.getState(),
+            m_frontRight.getState(),
+            m_rearLeft.getState(),
+            m_rearRight.getState()
+        });
   }
 
   @Override
   public void periodic() {
+    // SmartDashboard.putData("limelight", LimelightHelpers.getBotPose2d());
     SmartDashboard.putNumber("gyro", -m_gyro.getYaw());
     SmartDashboard.putNumber("turn", LimelightHelpers.getTX(""));
 
@@ -159,22 +163,32 @@ public class DriveSubsystem extends SubsystemBase {
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-        }
-    );
+        });
 
     // Check if Limelight target is valid
-    if (LimelightHelpers.getTA("") < 0) {
-        Pose2d visionPose = LimelightHelpers.getBotPose2d("");  // Get robot pose from Limelight
-        double visionTimestamp = LimelightHelpers.getLatency_Capture(""); // Vision timestamp in seconds
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
+    LimelightHelpers.SetRobotOrientation("", -m_gyro.getYaw() - 180,
+     0, 0, 0, 0, 0);
+    boolean doRejectUpdate = false;
 
-        Double closestTagDistance = LimelightHelpers.getTA("");
-        // Use the closest tag distance to fetch standard deviation values
-        Matrix<N3, N1> visionStdDevMatrix = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(closestTagDistance);
-
-        // Inject the vision update into the Pose Estimator with proper standard deviation
-        m_poseEstimator.addVisionMeasurement(visionPose, visionTimestamp, visionStdDevMatrix);
+    if (mt2 == null) {
+      doRejectUpdate = true;
+      System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
+    } else {
+      if (Math.abs(m_gyro.getRate()) > 720) {
+        doRejectUpdate = true;
+      }
+      if (mt2.tagCount == 0) {
+        doRejectUpdate = true;
+      }
     }
-}
+
+    if (!doRejectUpdate) {
+      //Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(Arrays.stream(input.distancesToTargets).min());
+      m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
+      m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+    }
+  }
 
   /**
    * Returns the currently-estimated pose of the robot.
@@ -232,13 +246,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void drivePathplanner(ChassisSpeeds chassisSpeeds) {
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-      chassisSpeeds);
+        chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(
-      swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
-      m_frontLeft.setDesiredState(swerveModuleStates[0]);
-      m_frontRight.setDesiredState(swerveModuleStates[1]);
-      m_rearLeft.setDesiredState(swerveModuleStates[2]);
-      m_rearRight.setDesiredState(swerveModuleStates[3]);
+        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   /**

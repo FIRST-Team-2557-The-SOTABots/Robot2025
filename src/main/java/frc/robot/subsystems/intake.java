@@ -23,22 +23,23 @@ public class Intake extends SubsystemBase {
   private SparkMax m_left;
 
   private DigitalInput proxSensor;
+
   /** Creates a new intake. */
   public Intake() {
     m_right = new SparkMax(Constants.IntakeConstants.kRightCANid, Constants.IntakeConstants.kRightMotorType);
-    m_right.configure(Configs.Intake.rightConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_right.configure(Configs.Intake.rightConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     m_left = new SparkMax(Constants.IntakeConstants.kLeftCANid, Constants.IntakeConstants.kLeftMotorType);
-    m_left.configure(Configs.Intake.leftConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_left.configure(Configs.Intake.leftConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     proxSensor = new DigitalInput(8);
   }
 
-  public boolean hasCoral(){
+  public boolean hasCoral() {
     return !proxSensor.get();
   }
 

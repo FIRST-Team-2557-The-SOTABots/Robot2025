@@ -25,7 +25,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
-  public static final class LiftConstants{
+  public static final class LiftConstants {
     public static final int kRightCANid = 12;
     public static final int kLeftCANid = 13;
 
@@ -45,21 +45,21 @@ public final class Constants {
 
     public static final double kLiftGearRatio = 1;
 
-    public final class LiftHeight{
+    public final class LiftHeight {
       public static final double kPositionResting = 0.2;
       // public static final double kPositionSafe = 5;
       public static final double kPositionL2 = 6;
       public static final double kPositionL3 = 13;
       public static final double kPositionL4 = 24;
-      public static final double kPositionCoralStation =7;
+      public static final double kPositionCoralStation = 7;
     }
 
     public static final double kZeroSpeed = 0.01;
     public static final double kZeroTolerance = 10;
 
   }
-  
-  public static final class WristConstants{
+
+  public static final class WristConstants {
     public static final int kMotorCANid = 14;
 
     public static final MotorType kMotorType = MotorType.kBrushless;
@@ -72,21 +72,20 @@ public final class Constants {
     public static final double kWristI = 0.0;
     public static final double kWristD = 0.0;
 
-
-    public final class WristPostion{
+    public final class WristPostion {
       public static final double kPositionResting = 5;
       public static final double kPositionSafe = 15;
       public static final double kPositionL23 = 35;
       public static final double kPositionL4 = 30;
       public static final double kPosistionCoralStation = 15;
     }
-    
+
     public static final double kZeroSpeed = 0.2;
     public static final double kZeroTolerance = 10;
 
   }
 
-  public static final class FourBarConstants{
+  public static final class FourBarConstants {
     public static final int kMotorCANid = 9;
 
     public static final MotorType kMotorType = MotorType.kBrushless;
@@ -99,7 +98,7 @@ public final class Constants {
     public static final double kFourBarI = 0.0;
     public static final double kFourBarD = 0.0;
 
-    public final class FourBarPostion{
+    public final class FourBarPostion {
       public static final double kPositionResting = 0.38;
       public static final double kPositionCoral = 0.725;
       public static final double kPositionAlgae = 0.62;
@@ -108,7 +107,7 @@ public final class Constants {
 
   }
 
-  public static final class OutakeConstants{
+  public static final class OutakeConstants {
     public static final int kMotorCANid = 15;
 
     public static final MotorType kMotorType = MotorType.kBrushless;
@@ -129,7 +128,7 @@ public final class Constants {
 
   }
 
-  public static final class IntakeConstants{
+  public static final class IntakeConstants {
     public static final int kRightCANid = 10;
     public static final int kLeftCANid = 11;
 
@@ -155,16 +154,16 @@ public final class Constants {
     }
   }
 
-    public static final class ClimberConstants {
-      public static final int kMotorCANid = 16;
+  public static final class ClimberConstants {
+    public static final int kMotorCANid = 16;
 
-      public static final MotorType kMotorType = MotorType.kBrushless;
+    public static final MotorType kMotorType = MotorType.kBrushless;
 
-      public static final boolean kMotorInverted = false;
+    public static final boolean kMotorInverted = false;
 
-      public static final int kMotorCurrentLimmit = 50;
-      
-    }
+    public static final int kMotorCurrentLimmit = 50;
+
+  }
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of

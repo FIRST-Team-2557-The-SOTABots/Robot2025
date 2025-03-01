@@ -24,27 +24,28 @@ public class Lift extends SubsystemBase {
   private RelativeEncoder m_rightEncoder;
   private PIDController m_PID;
   private double position;
-  
+
   private SparkMax m_left;
   private RelativeEncoder m_leftEncoder;
+
   /** Creates a new Lift. */
   public Lift() {
     m_right = new SparkMax(Constants.LiftConstants.kRightCANid, Constants.LiftConstants.kRightMotorType);
-    m_right.configure(Configs.Lift.rightConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_right.configure(Configs.Lift.rightConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     m_left = new SparkMax(Constants.LiftConstants.kLeftCANid, Constants.LiftConstants.kLeftMotorType);
-    m_left.configure(Configs.Lift.leftConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_left.configure(Configs.Lift.leftConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
-    m_PID = new PIDController(Constants.LiftConstants.kLiftLowP, 
-    Constants.LiftConstants.kLiftI,
-    Constants.LiftConstants.kLiftD);
+    m_PID = new PIDController(Constants.LiftConstants.kLiftLowP,
+        Constants.LiftConstants.kLiftI,
+        Constants.LiftConstants.kLiftD);
   }
 
-  public void setVoltage(double voltage){
+  public void setVoltage(double voltage) {
     m_left.set(voltage);
     m_right.set(voltage);
   }
@@ -54,7 +55,7 @@ public class Lift extends SubsystemBase {
   }
 
   public void setPostion(double position) {
-    if (position < m_right.getEncoder().getPosition()){
+    if (position < m_right.getEncoder().getPosition()) {
       m_PID.setP(Constants.LiftConstants.kLiftLowP);
       m_PID.setI(0);
     } else {
@@ -66,21 +67,22 @@ public class Lift extends SubsystemBase {
 
   public void setZero() {
     // while(m_right.getBusVoltage() < Constants.LiftConstants.kZeroTolerance) {
-    //   position = m_rightEncoder.getPosition() - Constants.WristConstants.kZeroSpeed;
+    // position = m_rightEncoder.getPosition() -
+    // Constants.WristConstants.kZeroSpeed;
     // }
     // m_rightEncoder.setPosition(0);
     // m_leftEncoder.setPosition(0);
   }
 
-  public double getOutput(){
-    if ((position < m_right.getEncoder().getPosition() + 1) && (position > m_right.getEncoder().getPosition() - 1)){
+  public double getOutput() {
+    if ((position < m_right.getEncoder().getPosition() + 1) && (position > m_right.getEncoder().getPosition() - 1)) {
       return .1;
     } else {
       return m_PID.calculate(m_right.getEncoder().getPosition(), position);
     }
   }
 
-  public void resetLift(){
+  public void resetLift() {
     m_right.getEncoder().setPosition(0);
   }
 
@@ -91,10 +93,9 @@ public class Lift extends SubsystemBase {
     SmartDashboard.putNumber("lift PID", m_PID.calculate(m_right.getEncoder().getPosition(), position));
     SmartDashboard.putNumber("lift setpoint", position);
     SmartDashboard.putNumber("lift postion", m_right.getEncoder().getPosition());
-    //SmartDashboard.putNumber("lift MP", m_right.GET());
+    // SmartDashboard.putNumber("lift MP", m_right.GET());
     SmartDashboard.putNumber("lift P", m_PID.getP());
     SmartDashboard.putNumber("period", m_PID.getPeriod());
-    
 
     SmartDashboard.putNumber("lift error", m_PID.getError());
     SmartDashboard.putNumber("lift error acc", m_PID.getAccumulatedError());

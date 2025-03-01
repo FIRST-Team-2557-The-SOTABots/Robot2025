@@ -22,12 +22,13 @@ public class FourBar extends SubsystemBase {
   private AbsoluteEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
   private double position = 0;
+
   /** Creates a new fourbar. */
   public FourBar() {
     m_motor = new SparkMax(Constants.FourBarConstants.kMotorCANid, Constants.FourBarConstants.kMotorType);
-    m_motor.configure(Configs.FourBar.motorConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_motor.configure(Configs.FourBar.motorConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     m_motorEncoder = m_motor.getAbsoluteEncoder();
     m_motorPID = m_motor.getClosedLoopController();
@@ -37,11 +38,11 @@ public class FourBar extends SubsystemBase {
     this.position = position;
   }
 
-  public double getPostion(){
+  public double getPostion() {
     return m_motorEncoder.getPosition();
   }
 
-  public boolean isResting(){
+  public boolean isResting() {
     return getPostion() < Constants.FourBarConstants.FourBarPostion.kPositionResting;
   }
 

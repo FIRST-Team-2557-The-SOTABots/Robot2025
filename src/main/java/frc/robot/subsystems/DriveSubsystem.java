@@ -26,6 +26,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -72,10 +74,13 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
+  private StructArrayPublisher<Pose2d> arrayPublisher = NetworkTableInstance.getDefault()
+  .getStructArrayTopic("MyPoseArray", Pose2d.struct).publish();
+
   private static final InterpolatingMatrixTreeMap<Double, N3, N1> MEASUREMENT_STD_DEV_DISTANCE_MAP = new InterpolatingMatrixTreeMap<>();
 
   static {
-    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(3, 3, 999999.0)); //n1 and n2 are for x and y, n3 is for angle
+    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(1.5, 1.5, 999999.0)); //n1 and n2 are for x and y, n3 is for angle
     MEASUREMENT_STD_DEV_DISTANCE_MAP.put(8.0, VecBuilder.fill(7.0, 7.0, 999999.0)); 
   }
 
@@ -166,14 +171,14 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
     // Check if Limelight target is valid
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
-    LimelightHelpers.SetRobotOrientation("", -m_gyro.getYaw() - 180,
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("");
+    LimelightHelpers.SetRobotOrientation("", -m_gyro.getYaw(),
      0, 0, 0, 0, 0);
     boolean doRejectUpdate = false;
 
     if (mt2 == null) {
       doRejectUpdate = true;
-      System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
+      //System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
     } else {
       if (Math.abs(m_gyro.getRate()) > 720) {
         doRejectUpdate = true;
@@ -184,10 +189,14 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     if (!doRejectUpdate) {
+      arrayPublisher.set(new Pose2d[] {getPose(), mt2.pose});
       Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
       m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
       m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-      SmartDashboard.putNumber("distance", mt2.avgTagDist);
+      SmartDashboard.putNumber("mt2 rot", mt2.pose.getRotation().getDegrees());
+      SmartDashboard.putNumber("pose rot", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+    } else {
+      m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(999999.0, 999999.0, 999999.0));
     }
   }
 

@@ -3,6 +3,7 @@ package frc.robot;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.AlternateEncoderConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import frc.robot.Constants.ModuleConstants;
@@ -122,39 +123,39 @@ public final class Configs {
         }
 
         public static final class Intake {
-                public static final SparkMaxConfig rightConfig = new SparkMaxConfig();
-                public static final SparkMaxConfig leftConfig = new SparkMaxConfig();
+                public static final SparkMaxConfig intakeConfig = new SparkMaxConfig();
+                public static final SparkFlexConfig deliveryConfig = new SparkFlexConfig();
 
                 static {
-                        rightConfig
+                        intakeConfig
                                         .idleMode(IdleMode.kBrake)
-                                        .inverted(Constants.IntakeConstants.kRightInverted)
-                                        .smartCurrentLimit(Constants.IntakeConstants.kRightCurrentLimit);
-                        rightConfig.encoder
-                                        .positionConversionFactor(1)
-                                        .velocityConversionFactor(1);
-                        rightConfig.closedLoop
-                                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                        .pid(Constants.IntakeConstants.kIntakeP,
-                                                        Constants.IntakeConstants.kIntakeI,
-                                                        Constants.IntakeConstants.kIntakeD)
-                                        .velocityFF(1)
-                                        .outputRange(-1, 1);
+                                        .inverted(Constants.IntakeConstants.kIntakeInverted)
+                                        .smartCurrentLimit(Constants.IntakeConstants.kIntakeCurrentLimit);
+                        // rightConfig.encoder
+                        //                 .positionConversionFactor(1)
+                        //                 .velocityConversionFactor(1);
+                        // rightConfig.closedLoop
+                        //                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        //                 .pid(Constants.IntakeConstants.kIntakeP,
+                        //                                 Constants.IntakeConstants.kIntakeI,
+                        //                                 Constants.IntakeConstants.kIntakeD)
+                        //                 .velocityFF(1)
+                        //                 .outputRange(-1, 1);
 
-                        leftConfig
+                        deliveryConfig
                                         .idleMode(IdleMode.kBrake)
-                                        .inverted(Constants.IntakeConstants.kLeftInverted)
-                                        .smartCurrentLimit(Constants.IntakeConstants.kLeftCurrentLimit);
-                        leftConfig.encoder
-                                        .positionConversionFactor(1)
-                                        .velocityConversionFactor(1);
-                        leftConfig.closedLoop
-                                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                        .pid(Constants.IntakeConstants.kIntakeP,
-                                                        Constants.IntakeConstants.kIntakeI,
-                                                        Constants.IntakeConstants.kIntakeD)
-                                        .velocityFF(1)
-                                        .outputRange(-1, 1);
+                                        .inverted(Constants.IntakeConstants.kDeliveryInverted)
+                                        .smartCurrentLimit(Constants.IntakeConstants.kDeliveryCurrentLimit);
+                        // leftConfig.encoder
+                        //                 .positionConversionFactor(1)
+                        //                 .velocityConversionFactor(1);
+                        // leftConfig.closedLoop
+                        //                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        //                 .pid(Constants.IntakeConstants.kIntakeP,
+                        //                                 Constants.IntakeConstants.kIntakeI,
+                        //                                 Constants.IntakeConstants.kIntakeD)
+                        //                 .velocityFF(1)
+                        //                 .outputRange(-1, 1);
                 }
         }
 

@@ -23,8 +23,8 @@ public class AutoStopIntake extends SequentialCommandGroup {
         () -> m_fourbar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionCoral),
           m_fourbar),
       new RunCommand(
-        () -> m_intake.setVoltage(Constants.IntakeConstants.IntakeSpeeds.kSpeedCoralRight,
-        Constants.IntakeConstants.IntakeSpeeds.kSpeedCoralLeft),
+        () -> m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts,
+        Constants.IntakeConstants.kDeliveryVolts),
          m_intake)
          .until(m_intake::hasCoral),
       Commands.runOnce(

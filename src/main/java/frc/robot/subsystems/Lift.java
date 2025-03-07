@@ -13,6 +13,8 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,39 +24,41 @@ import frc.robot.Constants;
 public class Lift extends SubsystemBase {
   private SparkMax m_right;
   private RelativeEncoder m_rightEncoder;
-  private PIDController m_PID;
+  private ProfiledPIDController m_PID;
   private double position;
-  
+
   private SparkMax m_left;
   private RelativeEncoder m_leftEncoder;
+
   /** Creates a new Lift. */
   public Lift() {
     m_right = new SparkMax(Constants.LiftConstants.kRightCANid, Constants.LiftConstants.kRightMotorType);
-    m_right.configure(Configs.Lift.rightConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_right.configure(Configs.Lift.rightConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     m_left = new SparkMax(Constants.LiftConstants.kLeftCANid, Constants.LiftConstants.kLeftMotorType);
-    m_left.configure(Configs.Lift.leftConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_left.configure(Configs.Lift.leftConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
-    m_PID = new PIDController(Constants.LiftConstants.kLiftLowP, 
-    Constants.LiftConstants.kLiftI,
-    Constants.LiftConstants.kLiftD);
+    m_PID = new ProfiledPIDController(Constants.LiftConstants.kLiftLowP,
+        Constants.LiftConstants.kLiftI,
+        Constants.LiftConstants.kLiftD,
+        new TrapezoidProfile.Constraints(Constants.LiftConstants.kLiftMaxSpeed, Constants.LiftConstants.kLiftMaxAcceleration));
   }
 
-  public void setVoltage(double voltage){
-    m_left.set(voltage);
-    m_right.set(voltage);
+  public void setVoltage(double voltage) {
+    m_left.setVoltage(voltage);
+    m_right.setVoltage(voltage);
   }
 
   public boolean isInPostion() {
-    return (m_right.getEncoder().getPosition() < 3);
+    return (m_right.getEncoder().getPosition() < 2);
   }
 
   public void setPostion(double position) {
-    if (position < m_right.getEncoder().getPosition()){
+    if (position < m_right.getEncoder().getPosition()) {
       m_PID.setP(Constants.LiftConstants.kLiftLowP);
       m_PID.setI(0);
     } else {
@@ -66,37 +70,36 @@ public class Lift extends SubsystemBase {
 
   public void setZero() {
     // while(m_right.getBusVoltage() < Constants.LiftConstants.kZeroTolerance) {
-    //   position = m_rightEncoder.getPosition() - Constants.WristConstants.kZeroSpeed;
+    // position = m_rightEncoder.getPosition() -
+    // Constants.WristConstants.kZeroSpeed;
     // }
     // m_rightEncoder.setPosition(0);
     // m_leftEncoder.setPosition(0);
   }
 
-  public double getOutput(){
-    if ((position < m_right.getEncoder().getPosition() + 1) && (position > m_right.getEncoder().getPosition() - 1)){
-      return .1;
-    } else {
-      return m_PID.calculate(m_right.getEncoder().getPosition(), position);
-    }
+  public double getOutput() {
+    // if ((position < m_right.getEncoder().getPosition() + 1) && (position > m_right.getEncoder().getPosition() - 1)) {
+    //   return .1;
+    // } else {
+    //   return m_PID.calculate(m_right.getEncoder().getPosition(), position);
+    // }
+    return 0;
   }
 
-  public void resetLift(){
+  public void resetLift() {
     m_right.getEncoder().setPosition(0);
   }
 
   @Override
   public void periodic() {
-    m_right.set(MathUtil.clamp(getOutput(), -.3, .3));
-    m_left.set(MathUtil.clamp(getOutput(), -.3, .3));
+    setVoltage(MathUtil.clamp(m_PID.calculate(m_right.getEncoder().getPosition(), position), -12, 12));
+
     SmartDashboard.putNumber("lift PID", m_PID.calculate(m_right.getEncoder().getPosition(), position));
     SmartDashboard.putNumber("lift setpoint", position);
     SmartDashboard.putNumber("lift postion", m_right.getEncoder().getPosition());
-    //SmartDashboard.putNumber("lift MP", m_right.GET());
+    // SmartDashboard.putNumber("lift MP", m_right.GET());
     SmartDashboard.putNumber("lift P", m_PID.getP());
     SmartDashboard.putNumber("period", m_PID.getPeriod());
-    
-
-    SmartDashboard.putNumber("lift error", m_PID.getError());
     SmartDashboard.putNumber("lift error acc", m_PID.getAccumulatedError());
     // This method will be called once per scheduler run
   }

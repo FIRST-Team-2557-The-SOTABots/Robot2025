@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.apriltag.AprilTag;
 import frc.robot.Commands.Drive.MoveToAprilTag;
@@ -37,7 +39,7 @@ import frc.robot.Commands.Lift.LiftAndWristMove;
 import frc.robot.Commands.Wrist.AutoStopWrist;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
-
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import java.util.List;
 
@@ -58,11 +60,11 @@ public class RobotContainer {
   private final Lift m_lift = new Lift();
   private final Wrist m_wrist = new Wrist(m_lift);
   private final Outake m_outake = new Outake();
-  private final Climber m_climber = new Climber();
-  //private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();;
+  // private final Climber m_climber = new Climber();
+  private final SendableChooser<Command> autoChooser;
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-  XboxController m_manipulatorController = new XboxController(OIConstants.kManipulatorControllerPort);
+  CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  CommandXboxController m_manipulatorController = new CommandXboxController(OIConstants.kManipulatorControllerPort);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -73,24 +75,22 @@ public class RobotContainer {
     configureButtonBindings();
 
     m_fourBar.setDefaultCommand(new RunCommand(
-        () -> m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting),
-        m_fourBar));
-    
+    () ->
+    m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting),
+    m_fourBar));
+
     m_lift.setDefaultCommand(new RunCommand(
-        () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
-        m_lift));
+    () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
+    m_lift));
 
     m_wrist.setDefaultCommand(new RunCommand(
-        () -> m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionResting),
-         m_wrist));
+    () ->
+    m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionResting),
+    m_wrist));
 
-    m_climber.setDefaultCommand(new RunCommand(
-        () -> m_climber.setVoltage((-m_manipulatorController.getLeftY()) * 12),
-         m_climber));
-
-    // m_wrist.setDefaultCommand(new RunCommand(
-    //     () -> m_wrist.setSpeed(-m_manipulatorController.getLeftY()),
-    //     m_wrist));
+    // m_climber.setDefaultCommand(new RunCommand(
+    // () -> m_climber.setVoltage((-m_manipulatorController.getLeftY()) * 12),
+    // m_climber));
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -103,6 +103,16 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true),
             m_robotDrive));
+
+    // ...
+
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+    // Another option that allows you to specify the default auto by its name
+    // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -115,153 +125,244 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
+    m_driverController.rightBumper()
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
 
-    new JoystickButton(m_driverController, Button.kStart.value)
+    m_driverController.start()
         .onTrue(Commands.runOnce(
-            () -> m_robotDrive.
-            zeroHeading(),
+            () -> m_robotDrive.zeroHeading(),
             m_robotDrive));
 
-    // new JoystickButton(m_manipulatorController, Button.kStart.value)
-    //     .whileTrue(new RunCommand(
-    //         () -> {m_wrist.setZero();
-    //             m_lift.setZero();},
-    //          m_wrist, m_lift));
+    // l4 l3 l2 auto go up and down
 
-    // new JoystickButton(m_manipulatorController, Button.kA.value)
-    //     .onTrue(new AutoStopIntake(m_fourBar, m_intake)
-    //         .andThen(new AutoStopWrist(m_lift, m_wrist, m_outake, m_fourBar, m_intake)))
-    //     .onFalse(Commands.runOnce(
-    //         () -> m_intake.setVoltage(0, 0), 
-    //         m_intake));
-
-    new JoystickButton(m_manipulatorController, Button.kA.value)
-        .onTrue(new AutoStopIntake(m_fourBar, m_intake))
-        .onFalse(Commands.runOnce(
-            () -> {m_intake.setVoltage(0, 0);
-            m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting);}, 
-            m_intake, m_fourBar));
-
-    new JoystickButton(m_manipulatorController, Button.kLeftStick.value)
-        .onTrue(new RunCommand(
-            () -> {m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionAlgae);
-                m_intake.setVoltage(Constants.IntakeConstants.IntakeSpeeds.kSpeedAlgeaRight,
-                Constants.IntakeConstants.IntakeSpeeds.kSpeedAlgeaLeft);},
-                m_fourBar, m_intake))
-        .onFalse(Commands.runOnce(
-            () -> m_intake.setVoltage(0, 0), 
-            m_intake));
-
-        new JoystickButton(m_manipulatorController, Button.kLeftBumper.value)
-            .onTrue(new RunCommand(
-                () -> {m_intake.setVoltage(Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery,
-                    Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery);
-                    m_outake.setVoltage(Constants.OutakeConstants.OutakeSpeeds.kSpeedDelvery);}
-                        ,m_intake, m_outake))
-            .onFalse(new RunCommand(
-                () -> {m_intake.setVoltage(0, 0);
-                    m_outake.setVoltage(0);}
-                        ,m_intake, m_outake));
-
-        new JoystickButton(m_manipulatorController, Button.kRightBumper.value)
-            .onTrue(new RunCommand(
-                () -> {m_intake.setVoltage(-Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery, 
-                    -Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery);
-                    m_outake.setVoltage(-Constants.OutakeConstants.OutakeSpeeds.kSpeedDelvery);}
-                        ,m_intake, m_outake))
-            .onFalse(new RunCommand(
-                () -> {m_intake.setVoltage(0, 0);
-                    m_outake.setVoltage(0);}
-                        ,m_intake, m_outake));
-
-            //     new JoystickButton(m_manipulatorController, Button.kY.value)
-            // .onTrue(new RunCommand(
-            //     () -> {m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionL2);
-            //     m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL2);},
-            //     m_wrist,m_lift))
-            // .onFalse( new RunCommand(
-            //     () -> {m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionResting);
-            //     m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting);},
-            //     m_wrist,m_lift));
-
-        // new JoystickButton(m_manipulatorController, Button.kB.value)
-        //     .onTrue(Commands.runOnce(
-        //         () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL4),
-        //         m_lift))
-        //     .onFalse( new RunCommand(
-        //         () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
-        //         m_lift));
-
-        // new JoystickButton(m_manipulatorController, Button.kX.value)
-        //     .onTrue(new RunCommand(
-        //         () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL3),
-        //         m_lift))
-        //     .onFalse( new RunCommand(
-        //         () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
-        //         m_lift));
-
-        new JoystickButton(m_manipulatorController, Button.kB.value)
-        .onTrue(new LiftAndWristMove(m_lift, m_wrist, 
-            Constants.LiftConstants.LiftHeight.kPositionCoralStation,
-            Constants.WristConstants.WristPostion.kPositionResting))
-        .onFalse(new LiftAndWristMove(m_lift, m_wrist, 
+    m_manipulatorController.y().onTrue(new LiftAndWristMove(m_lift, m_wrist,
+        Constants.LiftConstants.LiftHeight.kPositionL4,
+        Constants.WristConstants.WristPostion.kPositionL4))
+        .onFalse(new LiftAndWristMove(m_lift, m_wrist,
             Constants.LiftConstants.LiftHeight.kPositionResting,
             Constants.WristConstants.WristPostion.kPositionResting));
 
-        new JoystickButton(m_manipulatorController, Button.kY.value)
-            .onTrue(new LiftAndWristMove(m_lift, m_wrist, 
-                Constants.LiftConstants.LiftHeight.kPositionL3,
-                Constants.WristConstants.WristPostion.kPositionL23))
-            .onFalse(new LiftAndWristMove(m_lift, m_wrist, 
-                Constants.LiftConstants.LiftHeight.kPositionResting,
-                Constants.WristConstants.WristPostion.kPositionResting));
+    m_manipulatorController.x().onTrue(new LiftAndWristMove(m_lift, m_wrist,
+        Constants.LiftConstants.LiftHeight.kPositionL3,
+        Constants.WristConstants.WristPostion.kPositionL23))
+        .onFalse(new LiftAndWristMove(m_lift, m_wrist,
+            Constants.LiftConstants.LiftHeight.kPositionResting,
+            Constants.WristConstants.WristPostion.kPositionResting));
 
-        new JoystickButton(m_manipulatorController, Button.kX.value)
-            .onTrue(new LiftAndWristMove(m_lift, m_wrist, 
-                Constants.LiftConstants.LiftHeight.kPositionL2,
-                Constants.WristConstants.WristPostion.kPositionL23))
-            .onFalse(new LiftAndWristMove(m_lift, m_wrist, 
-                Constants.LiftConstants.LiftHeight.kPositionResting,
-                Constants.WristConstants.WristPostion.kPositionResting));
+    m_manipulatorController.a().onTrue(new LiftAndWristMove(m_lift, m_wrist,
+        Constants.LiftConstants.LiftHeight.kPositionL2,
+        Constants.WristConstants.WristPostion.kPositionL23))
+        .onFalse(new LiftAndWristMove(m_lift, m_wrist,
+            Constants.LiftConstants.LiftHeight.kPositionResting,
+            Constants.WristConstants.WristPostion.kPositionResting));
 
-        // new JoystickButton(m_manipulatorController, Button.kY.value)
-        //     .onTrue(new RunCommand(
-        //         () -> m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionSafe),
-        //         m_wrist))
-        //     .onFalse( new RunCommand(
-        //         () -> m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionResting),
-        //         m_wrist));
+    //move the delivery to the outake for emergencys
+    m_manipulatorController.rightBumper().onTrue(new RunCommand(
+      () -> {m_intake.setVoltage(
+        Constants.IntakeConstants.kIntakeVolts,
+        Constants.IntakeConstants.kDeliveryVolts);
+        m_outake.setVoltage(
+          Constants.OutakeConstants.kOutakeVolts);},
+        m_intake, m_outake))
+      .onFalse(new RunCommand(
+        () -> {m_intake.setVoltage(0, 0);
+        m_outake.setVoltage(0);},
+        m_intake, m_outake));
 
-        // new JoystickButton(m_manipulatorController, Button.kRightStick.value)
-        //         .whileTrue(new RunCommand(
-        //             () -> {m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionClimb);
-        //             m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionL23);}, 
-        //             m_fourBar,m_wrist))
-        //         .onFalse(new RunCommand(
-        //             () -> {m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting);
-        //                 m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionResting);}, 
-        //                 m_fourBar,m_wrist));
+        m_manipulatorController.leftBumper().onTrue(new RunCommand(
+          () -> {m_intake.setVoltage(
+            -Constants.IntakeConstants.kIntakeVolts,
+            -Constants.IntakeConstants.kDeliveryVolts);
+            m_outake.setVoltage(
+              -Constants.OutakeConstants.kOutakeVolts);},
+            m_intake, m_outake))
+          .onFalse(new RunCommand(
+            () -> {m_intake.setVoltage(0, 0);
+            m_outake.setVoltage(0);},
+            m_intake, m_outake));
 
-//     new JoystickButton(m_manipulatorController, Button.kY.value)
-//         .onTrue(new RunCommand(
-//             () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL3), 
-//             m_lift));
+    m_manipulatorController.b().onTrue(new AutoStopIntake(
+      m_fourBar, m_intake))
+    .onFalse(Commands.runOnce(
+    () -> m_intake.setVoltage(0, 0),
+    m_intake));
 
-//     new JoystickButton(m_manipulatorController, Button.kX.value)
-//         .onTrue(new RunCommand(
-//             () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL2), 
-//             m_lift));
+    // m_manipulatorController.leftStick().onTrue(new RunCommand(
+    //   () -> m_climber.setVoltage(-6),
+    //   m_climber)).onFalse(
+    //     new RunCommand(
+    //   () -> m_climber.setVoltage(0),
+    //   m_climber));
 
-    new JoystickButton(m_manipulatorController, Button.kStart.value)
-        .onTrue(Commands.runOnce(
-            () -> m_lift.resetLift(),
-                m_lift));
+    //   m_manipulatorController.rightStick().onTrue(new RunCommand(
+    //     () -> m_climber.setVoltage(6),
+    //     m_climber)).onFalse(
+    //       new RunCommand(
+    //     () -> m_climber.setVoltage(0),
+    //     m_climber));
+
+      
+    m_manipulatorController.back().onTrue(new RunCommand(
+      () -> m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionClimb),
+      m_fourBar)).onFalse(
+        new RunCommand(
+      () -> m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting),
+      m_fourBar));
+    
+    // m_manipulatorController.x().onTrue(
+    //   () -> m_climber.setVoltage(
+    //     Constants.ClimberConstants.kClimberVolts
+    //   ))
+    //   .onFalse(
+    //   () -> m_climber.setVoltage(
+    //     0));
+
+    // new JoystickButton(m_manipulatorController, Button.kStart.value)
+    // .whileTrue(new RunCommand(
+    // () -> {m_wrist.setZero();
+    // m_lift.setZero();},
+    // m_wrist, m_lift));
+
+    // new JoystickButton(m_manipulatorController, Button.kA.value)
+    // .onTrue(new AutoStopIntake(m_fourBar, m_intake)
+    // .andThen(new AutoStopWrist(m_lift, m_wrist, m_outake, m_fourBar, m_intake)))
+    // .onFalse(Commands.runOnce(
+    // () -> m_intake.setVoltage(0, 0),
+    // m_intake));
+
+    // new JoystickButton(m_manipulatorController, Button.kA.value)
+    // .onTrue(new AutoStopIntake(m_fourBar, m_intake))
+    // .onFalse(Commands.runOnce(
+    // () -> {m_intake.setVoltage(0, 0);
+    // m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting);},
+    // m_intake, m_fourBar));
+
+    // new JoystickButton(m_manipulatorController, Button.kLeftStick.value)
+    // .onTrue(new RunCommand(
+    // () ->
+    // {m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionAlgae);
+    // m_intake.setVoltage(Constants.IntakeConstants.IntakeSpeeds.kSpeedAlgeaRight,
+    // Constants.IntakeConstants.IntakeSpeeds.kSpeedAlgeaLeft);},
+    // m_fourBar, m_intake))
+    // .onFalse(Commands.runOnce(
+    // () -> m_intake.setVoltage(0, 0),
+    // m_intake));
+
+    // new JoystickButton(m_manipulatorController, Button.kLeftBumper.value)
+    // .onTrue(new RunCommand(
+    // () ->
+    // {m_intake.setVoltage(Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery,
+    // Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery);
+    // m_outake.setVoltage(Constants.OutakeConstants.OutakeSpeeds.kSpeedDelvery);}
+    // ,m_intake, m_outake))
+    // .onFalse(new RunCommand(
+    // () -> {m_intake.setVoltage(0, 0);
+    // m_outake.setVoltage(0);}
+    // ,m_intake, m_outake));
+
+    // new JoystickButton(m_manipulatorController, Button.kRightBumper.value)
+    // .onTrue(new RunCommand(
+    // () ->
+    // {m_intake.setVoltage(-Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery,
+    // -Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery);
+    // m_outake.setVoltage(-Constants.OutakeConstants.OutakeSpeeds.kSpeedDelvery);}
+    // ,m_intake, m_outake))
+    // .onFalse(new RunCommand(
+    // () -> {m_intake.setVoltage(0, 0);
+    // m_outake.setVoltage(0);}
+    // ,m_intake, m_outake));
+
+    // new JoystickButton(m_manipulatorController, Button.kY.value)
+    // .onTrue(new RunCommand(
+    // () ->
+    // {m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionL2);
+    // m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL2);},
+    // m_wrist,m_lift))
+    // .onFalse( new RunCommand(
+    // () ->
+    // {m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionResting);
+    // m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting);},
+    // m_wrist,m_lift));
+
+    // new JoystickButton(m_manipulatorController, Button.kB.value)
+    // .onTrue(Commands.runOnce(
+    // () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL4),
+    // m_lift))
+    // .onFalse( new RunCommand(
+    // () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
+    // m_lift));
+
+    // new JoystickButton(m_manipulatorController, Button.kX.value)
+    // .onTrue(new RunCommand(
+    // () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL3),
+    // m_lift))
+    // .onFalse( new RunCommand(
+    // () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionResting),
+    // m_lift));
+
+    // new JoystickButton(m_manipulatorController, Button.kB.value)
+    // .onTrue(new LiftAndWristMove(m_lift, m_wrist,
+    // Constants.LiftConstants.LiftHeight.kPositionCoralStation,
+    // Constants.WristConstants.WristPostion.kPositionResting))
+    // .onFalse(new LiftAndWristMove(m_lift, m_wrist,
+    // Constants.LiftConstants.LiftHeight.kPositionResting,
+    // Constants.WristConstants.WristPostion.kPositionResting));
+
+    // new JoystickButton(m_manipulatorController, Button.kY.value)
+    // .onTrue(new LiftAndWristMove(m_lift, m_wrist,
+    // Constants.LiftConstants.LiftHeight.kPositionL3,
+    // Constants.WristConstants.WristPostion.kPositionL23))
+    // .onFalse(new LiftAndWristMove(m_lift, m_wrist,
+    // Constants.LiftConstants.LiftHeight.kPositionResting,
+    // Constants.WristConstants.WristPostion.kPositionResting));
+
+    // new JoystickButton(m_manipulatorController, Button.kX.value)
+    // .onTrue(new LiftAndWristMove(m_lift, m_wrist,
+    // Constants.LiftConstants.LiftHeight.kPositionL2,
+    // Constants.WristConstants.WristPostion.kPositionL23))
+    // .onFalse(new LiftAndWristMove(m_lift, m_wrist,
+    // Constants.LiftConstants.LiftHeight.kPositionResting,
+    // Constants.WristConstants.WristPostion.kPositionResting));
+
+    // new JoystickButton(m_manipulatorController, Button.kY.value)
+    // .onTrue(new RunCommand(
+    // () ->
+    // m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionSafe),
+    // m_wrist))
+    // .onFalse( new RunCommand(
+    // () ->
+    // m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionResting),
+    // m_wrist));
+
+    // new JoystickButton(m_manipulatorController, Button.kRightStick.value)
+    // .whileTrue(new RunCommand(
+    // () ->
+    // {m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionClimb);
+    // m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionL23);},
+    // m_fourBar,m_wrist))
+    // .onFalse(new RunCommand(
+    // () ->
+    // {m_fourBar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting);
+    // m_wrist.setPosition(Constants.WristConstants.WristPostion.kPositionResting);},
+    // m_fourBar,m_wrist));
+
+    // new JoystickButton(m_manipulatorController, Button.kY.value)
+    // .onTrue(new RunCommand(
+    // () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL3),
+    // m_lift));
+
+    // new JoystickButton(m_manipulatorController, Button.kX.value)
+    // .onTrue(new RunCommand(
+    // () -> m_lift.setPostion(Constants.LiftConstants.LiftHeight.kPositionL2),
+    // m_lift));
+
+    // new JoystickButton(m_manipulatorController, Button.kStart.value)
+    // .onTrue(Commands.runOnce(
+    // () -> m_lift.resetLift(),
+    // m_lift));
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -269,45 +370,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // // Create config for trajectory
-    // TrajectoryConfig config = new TrajectoryConfig(
-    //     AutoConstants.kMaxSpeedMetersPerSecond,
-    //     AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-    //     // Add kinematics to ensure max speed is actually obeyed
-    //     .setKinematics(DriveConstants.kDriveKinematics);
-
-    // // An example trajectory to follow. All units in meters.
-    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    //     // Start at the origin facing the +X direction
-    //     new Pose2d(0, 0, new Rotation2d(0)),
-    //     // Pass through these two interior waypoints, making an 's' curve path
-    //     List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    //     // End 3 meters straight ahead of where we started, facing forward
-    //     new Pose2d(3, 0, new Rotation2d(0)),
-    //     config);
-
-    // var thetaController = new ProfiledPIDController(
-    //     AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-    //     exampleTrajectory,
-    //     m_robotDrive::getPose, // Functional interface to feed supplier
-    //     DriveConstants.kDriveKinematics,
-
-    //     // Position controllers
-    //     new PIDController(AutoConstants.kPXController, 0, 0),
-    //     new PIDController(AutoConstants.kPYController, 0, 0),
-    //     thetaController,
-    //     m_robotDrive::setModuleStates,
-    //     m_robotDrive);
-
-    // // Reset odometry to the starting pose of the trajectory.
-    // m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // // Run path following command, then stop at the end.
-    // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
-
-    return new RunCommand(() -> m_robotDrive.drive(-.5,0,0,true),m_robotDrive).withTimeout(1.5);
+    return autoChooser.getSelected();
   }
 }

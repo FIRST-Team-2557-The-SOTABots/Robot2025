@@ -25,7 +25,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
-  public static final class LiftConstants{
+  public static final class LiftConstants {
     public static final int kRightCANid = 12;
     public static final int kLeftCANid = 13;
 
@@ -33,33 +33,35 @@ public final class Constants {
     public static final MotorType kLeftMotorType = MotorType.kBrushless;
 
     public static final boolean kRightInverted = false;
-    public static final boolean kLeftInverted = false;
+    public static final boolean kLeftInverted = true;
 
     public static final int kRightCurrentLimit = 70;
     public static final int kLeftCurrentLimit = 70;
 
-    public static final double kLiftHighP = .05;
-    public static final double kLiftLowP = 0.005;
+    public static final double kLiftHighP = 1.5;
+    public static final double kLiftLowP = .5;
     public static final double kLiftI = .5;
     public static final double kLiftD = 0.0;
+    public static final double kLiftMaxSpeed = 15;
+    public static final double kLiftMaxAcceleration = 5;
 
     public static final double kLiftGearRatio = 1;
 
-    public final class LiftHeight{
-      public static final double kPositionResting = 0.2;
+    public final class LiftHeight {
+      public static final double kPositionResting = -.1;
       // public static final double kPositionSafe = 5;
-      public static final double kPositionL2 = 6;
-      public static final double kPositionL3 = 13;
-      public static final double kPositionL4 = 24;
-      public static final double kPositionCoralStation =7;
+      public static final double kPositionL2 = 39;
+      public static final double kPositionL3 = 65;
+      public static final double kPositionL4 = 100;
+      public static final double kPositionCoralStation = 7;
     }
 
     public static final double kZeroSpeed = 0.01;
     public static final double kZeroTolerance = 10;
 
   }
-  
-  public static final class WristConstants{
+
+  public static final class WristConstants {
     public static final int kMotorCANid = 14;
 
     public static final MotorType kMotorType = MotorType.kBrushless;
@@ -68,25 +70,24 @@ public final class Constants {
 
     public static final int kCurrentLimit = 80;
 
-    public static final double kWristP = .5;
+    public static final double kWristP = .3;
     public static final double kWristI = 0.0;
     public static final double kWristD = 0.0;
 
-
-    public final class WristPostion{
-      public static final double kPositionResting = 5;
+    public final class WristPostion {
+      public static final double kPositionResting = 4;
       public static final double kPositionSafe = 15;
       public static final double kPositionL23 = 35;
       public static final double kPositionL4 = 30;
       public static final double kPosistionCoralStation = 15;
     }
-    
+
     public static final double kZeroSpeed = 0.2;
     public static final double kZeroTolerance = 10;
 
   }
 
-  public static final class FourBarConstants{
+  public static final class FourBarConstants {
     public static final int kMotorCANid = 9;
 
     public static final MotorType kMotorType = MotorType.kBrushless;
@@ -95,20 +96,20 @@ public final class Constants {
 
     public static final int kCurrentLimit = 50;
 
-    public static final double kFourBarP = 3;
+    public static final double kFourBarP = 1.5;
     public static final double kFourBarI = 0.0;
     public static final double kFourBarD = 0.0;
 
-    public final class FourBarPostion{
-      public static final double kPositionResting = 0.38;
-      public static final double kPositionCoral = 0.725;
+    public final class FourBarPostion {
+      public static final double kPositionResting = 0.31;
+      public static final double kPositionCoral = 0.59;
       public static final double kPositionAlgae = 0.62;
       public static final double kPositionClimb = 0.45;
     }
 
   }
 
-  public static final class OutakeConstants{
+    public static final class OutakeConstants {
     public static final int kMotorCANid = 15;
 
     public static final MotorType kMotorType = MotorType.kBrushless;
@@ -123,48 +124,49 @@ public final class Constants {
     public static final double kOutakeI = 0.0;
     public static final double kOutakeD = 0.0;
 
-    public final class OutakeSpeeds {
-      public static final double kSpeedDelvery = 7;
-    }
+    public static final double kOutakeVolts = 7;
 
   }
 
-  public static final class IntakeConstants{
-    public static final int kRightCANid = 10;
-    public static final int kLeftCANid = 11;
+  public static final class IntakeConstants {
+    public static final int kIntakeCANid = 10;
+    public static final int kDeliveryCANid = 11;
 
-    public static final MotorType kRightMotorType = MotorType.kBrushless;
-    public static final MotorType kLeftMotorType = MotorType.kBrushless;
+    public static final MotorType kIntakeMotorType = MotorType.kBrushless;
+    public static final MotorType kDeliveryMotorType = MotorType.kBrushless;
 
-    public static final boolean kRightInverted = false;
-    public static final boolean kLeftInverted = true;
+    public static final boolean kIntakeInverted = true;
+    public static final boolean kDeliveryInverted = true;
 
-    public static final int kRightCurrentLimit = 50;
-    public static final int kLeftCurrentLimit = 50;
+    public static final int kIntakeCurrentLimit = 50;
+    public static final int kDeliveryCurrentLimit = 50;
 
-    public static final double kIntakeP = .001;
-    public static final double kIntakeI = 0.0;
-    public static final double kIntakeD = 0.0;
+    public static final double kIntakeVolts = 10;
+    public static final double kDeliveryVolts = 11;
 
-    public final class IntakeSpeeds {
-      public static final double kSpeedCoralRight = 10;
-      public static final double kSpeedCoralLeft = 10;
-      public static final double kSpeedAlgeaRight = 10;
-      public static final double kSpeedAlgeaLeft = 10;
-      public static final double kSpeedDelvery = 10;
-    }
+    // public static final double kIntakeP = .001;
+    // public static final double kIntakeI = 0.0;
+    // public static final double kIntakeD = 0.0;
+
+    // public final class IntakeSpeeds {
+    //   public static final double kSpeedCoralRight = 10;
+    //   public static final double kSpeedCoralLeft = 10;
+    //   public static final double kSpeedAlgeaRight = 10;
+    //   public static final double kSpeedAlgeaLeft = 10;
+    //   public static final double kSpeedDelvery = 10;
+    // }
   }
 
-    public static final class ClimberConstants {
-      public static final int kMotorCANid = 16;
+  public static final class ClimberConstants {
+    public static final int kMotorCANid = 16;
 
-      public static final MotorType kMotorType = MotorType.kBrushless;
+    public static final MotorType kMotorType = MotorType.kBrushless;
 
-      public static final boolean kMotorInverted = false;
+    public static final boolean kMotorInverted = true;
 
-      public static final int kMotorCurrentLimmit = 50;
-      
-    }
+    public static final int kMotorCurrentLimmit = 50;
+
+  }
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of

@@ -22,12 +22,13 @@ public class Outake extends SubsystemBase {
   private SparkMax m_motor;
   private double speed = 0;
   private DigitalInput m_limitswitch;
+
   /** Creates a new Outake. */
   public Outake() {
     m_motor = new SparkMax(Constants.OutakeConstants.kMotorCANid, Constants.OutakeConstants.kMotorType);
-    m_motor.configure(Configs.Outake.motorConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_motor.configure(Configs.Outake.motorConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     m_limitswitch = new DigitalInput(9);
   }
@@ -36,10 +37,9 @@ public class Outake extends SubsystemBase {
     m_motor.setVoltage(speed);
   }
 
-  public boolean hasCoral(){
+  public boolean hasCoral() {
     return m_limitswitch.get();
   }
-  
 
   @Override
   public void periodic() {

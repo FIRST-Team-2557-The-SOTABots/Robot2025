@@ -14,18 +14,19 @@ import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
   private SparkMax m_motor;
+
   /** Creates a new Climber. */
   public Climber() {
     m_motor = new SparkMax(Constants.ClimberConstants.kMotorCANid,
-     Constants.ClimberConstants.kMotorType);
+        Constants.ClimberConstants.kMotorType);
 
-    m_motor.configure(Configs.Climber.motorConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    m_motor.configure(Configs.Climber.motorConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
   }
 
-  public void setVoltage(double voltage){
-    if (voltage > 5){
+  public void setVoltage(double voltage) {
+    if (voltage > 5) {
       m_motor.setVoltage(voltage);
     }
   }

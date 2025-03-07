@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -19,32 +20,33 @@ import frc.robot.Configs;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
-  private SparkMax m_right;
-  private SparkMax m_left;
+  private SparkMax kIntake;
+  private SparkFlex kDelivery;
 
   private DigitalInput proxSensor;
+
   /** Creates a new intake. */
   public Intake() {
-    m_right = new SparkMax(Constants.IntakeConstants.kRightCANid, Constants.IntakeConstants.kRightMotorType);
-    m_right.configure(Configs.Intake.rightConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    kIntake = new SparkMax(Constants.IntakeConstants.kIntakeCANid, Constants.IntakeConstants.kIntakeMotorType);
+    kIntake.configure(Configs.Intake.intakeConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
-    m_left = new SparkMax(Constants.IntakeConstants.kLeftCANid, Constants.IntakeConstants.kLeftMotorType);
-    m_left.configure(Configs.Intake.leftConfig, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    kDelivery = new SparkFlex(Constants.IntakeConstants.kDeliveryCANid, Constants.IntakeConstants.kDeliveryMotorType);
+    kDelivery.configure(Configs.Intake.deliveryConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     proxSensor = new DigitalInput(8);
   }
 
-  public boolean hasCoral(){
+  public boolean hasCoral() {
     return !proxSensor.get();
   }
 
-  public void setVoltage(double rightSpeed, double leftSpeed) {
-    m_left.setVoltage(leftSpeed);
-    m_right.setVoltage(rightSpeed);
+  public void setVoltage(double intakeSpeed, double deliverySpeed) {
+    kDelivery.setVoltage(deliverySpeed);
+    kIntake.setVoltage(intakeSpeed);
   }
 
   @Override

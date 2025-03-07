@@ -32,15 +32,15 @@ public class AutoStopWrist extends SequentialCommandGroup {
           m_wrist).until(m_fourbar::isResting),
     //move the coral until it is in the outake
       new RunCommand(
-        () -> {m_intake.setVoltage(Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery,
-          Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery);
-          m_outake.setVoltage(Constants.OutakeConstants.OutakeSpeeds.kSpeedDelvery);},
+        () -> {m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts,
+          Constants.IntakeConstants.kDeliveryVolts);
+          m_outake.setVoltage(Constants.OutakeConstants.kOutakeVolts);},
         m_intake, m_outake).until(m_outake::hasCoral),
       //move the coral a little bit more
       new RunCommand(
-        () -> {m_intake.setVoltage(Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery,
-          Constants.IntakeConstants.IntakeSpeeds.kSpeedDelvery);
-          m_outake.setVoltage(Constants.OutakeConstants.OutakeSpeeds.kSpeedDelvery);},
+        () -> {m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts,
+          Constants.IntakeConstants.kDeliveryVolts);
+          m_outake.setVoltage(Constants.OutakeConstants.kOutakeVolts);},
         m_intake, m_outake).withTimeout(.2),
     //set everything too stop
       new RunCommand(

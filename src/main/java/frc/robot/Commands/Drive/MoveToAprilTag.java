@@ -4,7 +4,11 @@
 
 package frc.robot.Commands.Drive;
 import frc.robot.subsystems.DriveSubsystem;
+
+import java.util.Map;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 
@@ -14,6 +18,22 @@ public class MoveToAprilTag extends Command {
   private PIDController mTurn;
   private PIDController mfwd;
   private PIDController mside;
+
+  private static final Map<Integer, Double> tagIDToAngle = Map.ofEntries(
+    Map.entry(21, 180.0),
+    Map.entry(7, 180.0),
+    Map.entry(22, 120.0),
+    Map.entry(6, 120.0),
+    Map.entry(17, 60.0),
+    Map.entry(11, 60.0),
+    Map.entry(18, 0.0),
+    Map.entry(10, 0.0),
+    Map.entry(19, -60.0),
+    Map.entry(9, -60.0),
+    Map.entry(20, -120.0),
+    Map.entry(8, -120.0)
+);
+
   /** Creates a new AprilTag. */
   public MoveToAprilTag(DriveSubsystem drive) {
     this.mDrive = drive;
@@ -27,7 +47,6 @@ public class MoveToAprilTag extends Command {
     this.mTurn = turn;
 
     addRequirements(mDrive);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   public double correctedTX(){
@@ -49,7 +68,7 @@ public class MoveToAprilTag extends Command {
   }
 
   public double parallelDiff(){
-    return mDrive.getHeading() - (-92);
+    return mDrive.getHeading();
   }
 
 
@@ -63,11 +82,10 @@ public class MoveToAprilTag extends Command {
   @Override
   public void execute() {
     mDrive.drive(
-      //-mfwd.calculate(correctedTY(), 0),
-      0,
-      //mside.calculate(parallelDiff(),0),
-      0,
-      mTurn.calculate(correctedTX(), 0),
+      -mfwd.calculate(correctedTY(), 0),
+      mside.calculate(parallelDiff(),0),
+      mTurn.calculate(mDrive.getHeading(),
+       tagIDToAngle.get(LimelightHelpers.getFiducialID(""))),
       false);
   }
 

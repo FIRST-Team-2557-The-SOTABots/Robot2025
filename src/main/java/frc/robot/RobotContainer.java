@@ -60,7 +60,7 @@ public class RobotContainer {
   private final Lift m_lift = new Lift();
   private final Wrist m_wrist = new Wrist(m_lift);
   private final Outake m_outake = new Outake();
-  private final Climber m_climber = new Climber();
+  // private final Climber m_climber = new Climber();
   private final SendableChooser<Command> autoChooser;
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -189,19 +189,19 @@ public class RobotContainer {
     () -> m_intake.setVoltage(0, 0),
     m_intake));
 
-    m_manipulatorController.leftStick().onTrue(new RunCommand(
-      () -> m_climber.setVoltage(-6),
-      m_climber)).onFalse(
-        new RunCommand(
-      () -> m_climber.setVoltage(0),
-      m_climber));
+    // m_manipulatorController.leftStick().onTrue(new RunCommand(
+    //   () -> m_climber.setVoltage(-6),
+    //   m_climber)).onFalse(
+    //     new RunCommand(
+    //   () -> m_climber.setVoltage(0),
+    //   m_climber));
 
-      m_manipulatorController.rightStick().onTrue(new RunCommand(
-        () -> m_climber.setVoltage(12),
-        m_climber)).onFalse(
-          new RunCommand(
-        () -> m_climber.setVoltage(0),
-        m_climber));
+    //   m_manipulatorController.rightStick().onTrue(new RunCommand(
+    //     () -> m_climber.setVoltage(6),
+    //     m_climber)).onFalse(
+    //       new RunCommand(
+    //     () -> m_climber.setVoltage(0),
+    //     m_climber));
 
       
     m_manipulatorController.back().onTrue(new RunCommand(

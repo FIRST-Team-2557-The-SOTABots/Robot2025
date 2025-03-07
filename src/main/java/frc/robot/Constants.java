@@ -70,7 +70,7 @@ public final class Constants {
 
     public static final int kCurrentLimit = 80;
 
-    public static final double kWristP = .2;
+    public static final double kWristP = .3;
     public static final double kWristI = 0.0;
     public static final double kWristD = 0.0;
 
@@ -109,7 +109,7 @@ public final class Constants {
 
   }
 
-  public static final class OutakeConstants {
+    public static final class OutakeConstants {
     public static final int kMotorCANid = 15;
 
     public static final MotorType kMotorType = MotorType.kBrushless;
@@ -162,7 +162,7 @@ public final class Constants {
 
     public static final MotorType kMotorType = MotorType.kBrushless;
 
-    public static final boolean kMotorInverted = false;
+    public static final boolean kMotorInverted = true;
 
     public static final int kMotorCurrentLimmit = 50;
 

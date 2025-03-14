@@ -38,22 +38,22 @@ public final class Constants {
     public static final int kRightCurrentLimit = 70;
     public static final int kLeftCurrentLimit = 70;
 
-    public static final double kLiftHighP = 1.5;
+    public static final double kLiftHighP = 1;
     public static final double kLiftLowP = .5;
     public static final double kLiftI = .5;
     public static final double kLiftD = 0.0;
-    public static final double kLiftMaxSpeed = 15;
-    public static final double kLiftMaxAcceleration = 5;
+    public static final double kLiftMaxSpeed = 200;
+    public static final double kLiftMaxAcceleration = 75;
 
     public static final double kLiftGearRatio = 1;
 
     public final class LiftHeight {
       public static final double kPositionResting = -.1;
       // public static final double kPositionSafe = 5;
-      public static final double kPositionL2 = 39;
-      public static final double kPositionL3 = 65;
-      public static final double kPositionL4 = 100;
-      public static final double kPositionCoralStation = 7;
+      public static final double kPositionL2 = 20;
+      public static final double kPositionL3 = 48;
+      public static final double kPositionL4 = 104;
+      public static final double kPositionCoralStation = 28;
     }
 
     public static final double kZeroSpeed = 0.01;
@@ -79,7 +79,7 @@ public final class Constants {
       public static final double kPositionSafe = 15;
       public static final double kPositionL23 = 35;
       public static final double kPositionL4 = 30;
-      public static final double kPosistionCoralStation = 15;
+      public static final double kPosistionCoralStation = 7;
     }
 
     public static final double kZeroSpeed = 0.2;
@@ -103,14 +103,15 @@ public final class Constants {
     public final class FourBarPostion {
       public static final double kPositionResting = 0.31;
       public static final double kPositionCoral = 0.59;
-      public static final double kPositionAlgae = 0.62;
+      //public static final double kPositionAlgae = 0.62;
       public static final double kPositionClimb = 0.45;
+      public static final double kPositionL1 = .4;
     }
 
   }
 
     public static final class OutakeConstants {
-    public static final int kMotorCANid = 15;
+    public static final int kMotorCANid = 15;  
 
     public static final MotorType kMotorType = MotorType.kBrushless;
 
@@ -142,7 +143,7 @@ public final class Constants {
     public static final int kDeliveryCurrentLimit = 50;
 
     public static final double kIntakeVolts = 10;
-    public static final double kDeliveryVolts = 11;
+    public static final double kDeliveryVolts = 10;
 
     // public static final double kIntakeP = .001;
     // public static final double kIntakeI = 0.0;
@@ -164,7 +165,7 @@ public final class Constants {
 
     public static final boolean kMotorInverted = true;
 
-    public static final int kMotorCurrentLimmit = 50;
+    public static final int kMotorCurrentLimmit = 70;
 
   }
 

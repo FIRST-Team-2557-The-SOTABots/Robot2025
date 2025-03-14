@@ -63,7 +63,6 @@ public class Lift extends SubsystemBase {
       m_PID.setI(0);
     } else {
       m_PID.setP(Constants.LiftConstants.kLiftHighP);
-      m_PID.setI(Constants.LiftConstants.kLiftI);
     }
     this.position = position;
   }
@@ -98,9 +97,9 @@ public class Lift extends SubsystemBase {
     SmartDashboard.putNumber("lift setpoint", position);
     SmartDashboard.putNumber("lift postion", m_right.getEncoder().getPosition());
     // SmartDashboard.putNumber("lift MP", m_right.GET());
-    SmartDashboard.putNumber("lift P", m_PID.getP());
-    SmartDashboard.putNumber("period", m_PID.getPeriod());
-    SmartDashboard.putNumber("lift error acc", m_PID.getAccumulatedError());
+    //SmartDashboard.putNumber("lift P", m_PID.getP());
+    //SmartDashboard.putNumber("period", m_PID.getPeriod());
+    //SmartDashboard.putNumber("lift error acc", m_PID.getAccumulatedError());
     // This method will be called once per scheduler run
   }
 }

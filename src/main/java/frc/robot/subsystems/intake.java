@@ -45,7 +45,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void setVoltage(double intakeSpeed, double deliverySpeed) {
-    kDelivery.setVoltage(deliverySpeed);
+    kDelivery.setVoltage(0);
     kIntake.setVoltage(intakeSpeed);
   }
 

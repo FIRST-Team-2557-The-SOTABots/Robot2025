@@ -26,9 +26,11 @@ public class Climber extends SubsystemBase {
   }
 
   public void setVoltage(double voltage) {
-    if (voltage > 5) {
       m_motor.setVoltage(voltage);
-    }
+  }
+
+  public void setSpeed(double speed){
+    m_motor.set(speed);
   }
 
   @Override

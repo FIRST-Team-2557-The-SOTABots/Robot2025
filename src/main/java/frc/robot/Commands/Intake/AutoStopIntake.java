@@ -21,16 +21,23 @@ public class AutoStopIntake extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(Commands.runOnce(
         () -> m_fourbar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionCoral),
-          m_fourbar),
-      new RunCommand(
-        () -> m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts,
-        Constants.IntakeConstants.kDeliveryVolts),
-         m_intake)
-         .until(m_intake::hasCoral),
-      Commands.runOnce(
-        () -> { m_fourbar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting);
-          m_intake.setVoltage(0, 0);}, 
-          m_intake, m_fourbar));
+        m_fourbar),
+        new RunCommand(
+            () -> m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts,
+                Constants.IntakeConstants.kDeliveryVolts),
+            m_intake)
+            .until(m_intake::hasCoral),
+        new RunCommand(
+            () -> m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts,
+                Constants.IntakeConstants.kDeliveryVolts),
+            m_intake)
+            .withTimeout(.15),
+        Commands.runOnce(
+            () -> {
+              m_fourbar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting);
+              m_intake.setVoltage(0, 0);
+            },
+            m_intake, m_fourbar));
     addRequirements(m_fourbar, m_intake);
   }
 }

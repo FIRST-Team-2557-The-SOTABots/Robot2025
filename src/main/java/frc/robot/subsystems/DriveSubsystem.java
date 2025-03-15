@@ -75,18 +75,18 @@ public class DriveSubsystem extends SubsystemBase {
   private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
   private StructArrayPublisher<Pose2d> arrayPublisher = NetworkTableInstance.getDefault()
-  .getStructArrayTopic("MyPoseArray", Pose2d.struct).publish();
+      .getStructArrayTopic("MyPoseArray", Pose2d.struct).publish();
 
   private static final InterpolatingMatrixTreeMap<Double, N3, N1> MEASUREMENT_STD_DEV_DISTANCE_MAP = new InterpolatingMatrixTreeMap<>();
 
   static {
-    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(1.5, 1.5, 999999.0)); //n1 and n2 are for x and y, n3 is for angle
-    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(8.0, VecBuilder.fill(7.0, 7.0, 999999.0)); 
+    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(7.0, 7.0, 999999.0)); // n1 and n2 are for x and y, n3 is
+    MEASUREMENT_STD_DEV_DISTANCE_MAP.put(8.0, VecBuilder.fill(35.0, 35.0, 999999.0));
   }
 
   SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(-m_gyro.getYaw()),
+      Rotation2d.fromDegrees(getHeading()),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -141,7 +141,6 @@ public class DriveSubsystem extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
     );
-
   }
 
   public ChassisSpeeds getDriveOdom() {
@@ -157,12 +156,13 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // SmartDashboard.putData("limelight", LimelightHelpers.getBotPose2d());
-    SmartDashboard.putNumber("gyro", -m_gyro.getYaw());
+    SmartDashboard.putNumber("heading", getHeading());
+    SmartDashboard.putNumber("gyro", m_gyro.getYaw());
     SmartDashboard.putNumber("turn", LimelightHelpers.getTX(""));
 
     // Update pose estimator with swerve module positions and gyro data
     m_poseEstimator.update(
-        Rotation2d.fromDegrees(-m_gyro.getYaw()),
+        Rotation2d.fromDegrees(getHeading()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -171,14 +171,14 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
     // Check if Limelight target is valid
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("");
-    LimelightHelpers.SetRobotOrientation("", -m_gyro.getYaw(),
-     0, 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-coral");
+    LimelightHelpers.SetRobotOrientation("limelight-coral", getHeading(),
+        0, 0, 0, 0, 0);
     boolean doRejectUpdate = false;
 
     if (mt2 == null) {
       doRejectUpdate = true;
-      //System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
+      System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
     } else {
       if (Math.abs(m_gyro.getRate()) > 720) {
         doRejectUpdate = true;
@@ -189,7 +189,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     if (!doRejectUpdate) {
-      arrayPublisher.set(new Pose2d[] {getPose(), mt2.pose});
+      arrayPublisher.set(new Pose2d[] { getPose(), mt2.pose });
       Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
       m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
       m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
@@ -198,6 +198,8 @@ public class DriveSubsystem extends SubsystemBase {
     } else {
       m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(999999.0, 999999.0, 999999.0));
     }
+   
+    arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
   }
 
   /**
@@ -216,7 +218,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetPose(Pose2d pose) {
     m_poseEstimator.resetPosition(
-        Rotation2d.fromDegrees(-m_gyro.getYaw()),
+        Rotation2d.fromDegrees(getHeading()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -244,7 +246,7 @@ public class DriveSubsystem extends SubsystemBase {
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                Rotation2d.fromDegrees(-m_gyro.getYaw()))
+                Rotation2d.fromDegrees(getHeading()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -302,13 +304,15 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.reset();
   }
 
+  // public getGyroYaw(){}
+
   /**
    * Returns the heading of the robot.
    *
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(-m_gyro.getYaw()).getDegrees();
+    return Rotation2d.fromDegrees(-m_gyro.getYaw() + 180).getDegrees();
   }
 
   /**

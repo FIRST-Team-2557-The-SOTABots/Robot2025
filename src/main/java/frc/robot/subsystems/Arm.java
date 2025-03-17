@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
@@ -15,30 +16,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
-public class Wrist extends SubsystemBase {
+public class Arm extends SubsystemBase {
   private SparkMax m_motor;
-  private RelativeEncoder m_motorEncoder;
+  private SparkAbsoluteEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
   private double position;
   private Lift m_lift;
 
   /** Creates a new Wrist. */
-  public Wrist(Lift m_lift) {
+  public Arm(Lift m_lift) {
     this.m_lift = m_lift;
-    m_motor = new SparkMax(Constants.WristConstants.kMotorCANid, Constants.WristConstants.kMotorType);
-    m_motor.configure(Configs.Wrist.motorConfig,
+    m_motor = new SparkMax(Constants.ArmConstants.kMotorCANid, Constants.ArmConstants.kMotorType);
+    m_motor.configure(Configs.Arm.motorConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
 
-    m_motorEncoder = m_motor.getEncoder();
+    m_motorEncoder = m_motor.getAbsoluteEncoder();
     m_motorPID = m_motor.getClosedLoopController();
-  }
-
-  public void setZero() {
-    while (m_motor.getBusVoltage() < Constants.WristConstants.kZeroTolerance) {
-      position = m_motorEncoder.getPosition() + Constants.WristConstants.kZeroSpeed;
-    }
-    m_motorEncoder.setPosition(0);
   }
 
   public void setSpeed(double speed) {

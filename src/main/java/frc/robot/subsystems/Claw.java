@@ -18,32 +18,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
 
-public class Outake extends SubsystemBase {
-  private SparkMax m_motor;
-  private double speed = 0;
-  private DigitalInput m_limitswitch;
+public class Claw extends SubsystemBase {
+  private SparkMax m_right;
+  private SparkMax m_left;
 
   /** Creates a new Outake. */
-  public Outake() {
-    m_motor = new SparkMax(Constants.OutakeConstants.kMotorCANid, Constants.OutakeConstants.kMotorType);
-    m_motor.configure(Configs.Outake.motorConfig,
+  public Claw() {
+    m_motor = new SparkMax(Constants.ClawConstants.kMotorCANid, Constants.ClawConstants.kMotorType);
+    m_motor.configure(Configs.Claw.motorConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-
-    m_limitswitch = new DigitalInput(9);
   }
 
   public void setVoltage(double speed) {
-    m_motor.setVoltage(speed);
-  }
-
-  public boolean hasCoral() {
-    return m_limitswitch.get();
+    m_right.setVoltage(speed);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("outake has coral", hasCoral());
     // This method will be called once per scheduler run
   }
 }

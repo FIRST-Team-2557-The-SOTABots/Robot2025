@@ -20,54 +20,33 @@ public final class Configs {
                                         .inverted(Constants.LiftConstants.kRightInverted)
                                         .smartCurrentLimit(Constants.LiftConstants.kRightCurrentLimit);
                         rightConfig.encoder
-                                        .positionConversionFactor(Constants.LiftConstants.kLiftGearRatio)
-                                        .velocityConversionFactor(Constants.LiftConstants.kLiftGearRatio / 60);
-                        // rightConfig.closedLoop
-                        // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        // .pid(Constants.LiftConstants.kLiftP,
-                        // Constants.LiftConstants.kLiftI,
-                        // Constants.LiftConstants.kLiftD)
-                        // .outputRange(-1, 1);
-                        // rightConfig.closedLoop.maxMotion
-                        // .maxAcceleration(2)
-                        // .maxVelocity(5);
+                                        .positionConversionFactor(1)
+                                        .velocityConversionFactor(1/60);
 
                         leftConfig
                                         .idleMode(IdleMode.kBrake)
                                         .inverted(Constants.LiftConstants.kLeftInverted)
                                         .smartCurrentLimit(Constants.LiftConstants.kLeftCurrentLimit);
                         leftConfig.encoder
-                                        .positionConversionFactor(Constants.LiftConstants.kLiftGearRatio)
-                                        .velocityConversionFactor(Constants.LiftConstants.kLiftGearRatio / 60);
-                        // leftConfig.closedLoop
-                        // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        // .pid(Constants.LiftConstants.kLiftP,
-                        // Constants.LiftConstants.kLiftI,
-                        // Constants.LiftConstants.kLiftD)
-                        // .outputRange(-1, 1);
-                        // leftConfig.closedLoop.maxMotion
-                        // .maxAcceleration(2)
-                        // .maxVelocity(5);
+                                        .positionConversionFactor(1)
+                                        .velocityConversionFactor(1/60);
                 }
         }
 
-        public static final class Outake {
-                public static final SparkFlexConfig motorConfig = new SparkFlexConfig();
+        public static final class Claw {
+                public static final SparkMaxConfig rightConfig = new SparkMaxConfig();
+                public static final SparkMaxConfig leftConfig = new SparkMaxConfig();
 
                 static {
-                        motorConfig
+                        leftConfig
                                         .idleMode(IdleMode.kBrake)
-                                        .inverted(Constants.OutakeConstants.kInverted)
-                                        .smartCurrentLimit(Constants.OutakeConstants.kCurrentLimit);
-                        motorConfig.encoder
-                                        .positionConversionFactor(Constants.OutakeConstants.kOutakeGearRatio)
-                                        .velocityConversionFactor(Constants.OutakeConstants.kOutakeGearRatio / 60);
-                        motorConfig.closedLoop
-                                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                        .pid(Constants.OutakeConstants.kOutakeP,
-                                                        Constants.OutakeConstants.kOutakeI,
-                                                        Constants.OutakeConstants.kOutakeD)
-                                        .outputRange(-1, 1);
+                                        .inverted(Constants.ClawConstants.kLeftInverted)
+                                        .smartCurrentLimit(Constants.ClawConstants.kLeftCurrentLimit);
+
+                        rightConfig
+                                        .idleMode(IdleMode.kBrake)
+                                        .inverted(Constants.ClawConstants.kRightInverted)
+                                        .smartCurrentLimit(Constants.ClawConstants.kRightCurrentLimit);
                 }
         }
 
@@ -91,22 +70,22 @@ public final class Configs {
                 }
         }
 
-        public static final class Wrist {
+        public static final class Arm {
                 public static final SparkMaxConfig motorConfig = new SparkMaxConfig();
 
                 static {
                         motorConfig
                                         .idleMode(IdleMode.kBrake)
-                                        .inverted(Constants.WristConstants.kInverted)
-                                        .smartCurrentLimit(Constants.WristConstants.kCurrentLimit);
+                                        .inverted(Constants.ArmConstants.kInverted)
+                                        .smartCurrentLimit(Constants.ArmConstants.kCurrentLimit);
                         motorConfig.encoder
                                         .positionConversionFactor(1)
                                         .velocityConversionFactor(1);
                         motorConfig.closedLoop
-                                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                        .pid(Constants.WristConstants.kWristP,
-                                                        Constants.WristConstants.kWristI,
-                                                        Constants.WristConstants.kWristD)
+                                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                                        .pid(Constants.ArmConstants.kArmP,
+                                                        Constants.ArmConstants.kArmI,
+                                                        Constants.ArmConstants.kArmD)
                                         .outputRange(-1, 1);
                 }
         }
@@ -118,44 +97,19 @@ public final class Configs {
                         motorConfig
                                         .idleMode(IdleMode.kBrake)
                                         .inverted(Constants.ClimberConstants.kMotorInverted)
-                                        .smartCurrentLimit(Constants.ClimberConstants.kMotorCurrentLimmit);
+                                        .smartCurrentLimit(Constants.ClimberConstants.kMotorCurrentLimit);
                 }
         }
 
         public static final class Intake {
                 public static final SparkMaxConfig intakeConfig = new SparkMaxConfig();
-                public static final SparkFlexConfig deliveryConfig = new SparkFlexConfig();
 
                 static {
                         intakeConfig
                                         .idleMode(IdleMode.kBrake)
                                         .inverted(Constants.IntakeConstants.kIntakeInverted)
                                         .smartCurrentLimit(Constants.IntakeConstants.kIntakeCurrentLimit);
-                        // rightConfig.encoder
-                        //                 .positionConversionFactor(1)
-                        //                 .velocityConversionFactor(1);
-                        // rightConfig.closedLoop
-                        //                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        //                 .pid(Constants.IntakeConstants.kIntakeP,
-                        //                                 Constants.IntakeConstants.kIntakeI,
-                        //                                 Constants.IntakeConstants.kIntakeD)
-                        //                 .velocityFF(1)
-                        //                 .outputRange(-1, 1);
 
-                        deliveryConfig
-                                        .idleMode(IdleMode.kBrake)
-                                        .inverted(Constants.IntakeConstants.kDeliveryInverted)
-                                        .smartCurrentLimit(Constants.IntakeConstants.kDeliveryCurrentLimit);
-                        // leftConfig.encoder
-                        //                 .positionConversionFactor(1)
-                        //                 .velocityConversionFactor(1);
-                        // leftConfig.closedLoop
-                        //                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        //                 .pid(Constants.IntakeConstants.kIntakeP,
-                        //                                 Constants.IntakeConstants.kIntakeI,
-                        //                                 Constants.IntakeConstants.kIntakeD)
-                        //                 .velocityFF(1)
-                        //                 .outputRange(-1, 1);
                 }
         }
 

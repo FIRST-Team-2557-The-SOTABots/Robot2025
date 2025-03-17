@@ -31,12 +31,6 @@ public class Intake extends SubsystemBase {
     kIntake.configure(Configs.Intake.intakeConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-
-    kDelivery = new SparkFlex(Constants.IntakeConstants.kDeliveryCANid, Constants.IntakeConstants.kDeliveryMotorType);
-    kDelivery.configure(Configs.Intake.deliveryConfig,
-        ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
-
     proxSensor = new DigitalInput(8);
   }
 
@@ -44,8 +38,7 @@ public class Intake extends SubsystemBase {
     return !proxSensor.get();
   }
 
-  public void setVoltage(double intakeSpeed, double deliverySpeed) {
-    kDelivery.setVoltage(0);
+  public void setVoltage(double intakeSpeed) {
     kIntake.setVoltage(intakeSpeed);
   }
 

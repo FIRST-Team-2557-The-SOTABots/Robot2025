@@ -10,15 +10,15 @@ import frc.robot.Constants;
 import frc.robot.subsystems.FourBar;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
-import frc.robot.subsystems.Outake;
-import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Arm;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class LiftAndWristMove extends SequentialCommandGroup {
   /** Creates a new LiftAndWristMove. */
-  public LiftAndWristMove(Lift m_lift, Wrist m_wrist, double liftHeight, double outakeSetpoint) {
+  public LiftAndWristMove(Lift m_lift, Arm m_wrist, double liftHeight, double outakeSetpoint) {
 addCommands(new RunCommand(
         () -> {m_wrist.setPosition(outakeSetpoint);
           m_lift.setPostion(liftHeight);},

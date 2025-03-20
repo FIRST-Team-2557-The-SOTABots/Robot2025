@@ -29,9 +29,9 @@ public class Climber extends SubsystemBase {
       m_motor.setVoltage(voltage);
   }
 
-  public void setSpeed(double speed){
-    m_motor.set(speed);
-  }
+  // public void setSpeed(double speed){
+  //   m_motor.set(speed);
+  // }
 
   @Override
   public void periodic() {

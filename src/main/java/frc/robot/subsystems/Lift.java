@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
@@ -22,22 +23,22 @@ import frc.robot.Configs;
 import frc.robot.Constants;
 
 public class Lift extends SubsystemBase {
-  private SparkMax m_right;
+  private SparkFlex m_right;
   private RelativeEncoder m_rightEncoder;
   private ProfiledPIDController m_PID;
   private double position;
 
-  private SparkMax m_left;
+  private SparkFlex m_left;
   private RelativeEncoder m_leftEncoder;
 
   /** Creates a new Lift. */
   public Lift() {
-    m_right = new SparkMax(Constants.LiftConstants.kRightCANid, Constants.LiftConstants.kRightMotorType);
+    m_right = new SparkFlex(Constants.LiftConstants.kRightCANid, Constants.LiftConstants.kRightMotorType);
     m_right.configure(Configs.Lift.rightConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
 
-    m_left = new SparkMax(Constants.LiftConstants.kLeftCANid, Constants.LiftConstants.kLeftMotorType);
+    m_left = new SparkFlex(Constants.LiftConstants.kLeftCANid, Constants.LiftConstants.kLeftMotorType);
     m_left.configure(Configs.Lift.leftConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);

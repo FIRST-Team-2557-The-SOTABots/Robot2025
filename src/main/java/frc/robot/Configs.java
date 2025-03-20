@@ -21,7 +21,7 @@ public final class Configs {
                                         .smartCurrentLimit(Constants.LiftConstants.kRightCurrentLimit);
                         rightConfig.encoder
                                         .positionConversionFactor(1)
-                                        .velocityConversionFactor(1/60);
+                                        .velocityConversionFactor(1);
 
                         leftConfig
                                         .idleMode(IdleMode.kBrake)
@@ -29,7 +29,7 @@ public final class Configs {
                                         .smartCurrentLimit(Constants.LiftConstants.kLeftCurrentLimit);
                         leftConfig.encoder
                                         .positionConversionFactor(1)
-                                        .velocityConversionFactor(1/60);
+                                        .velocityConversionFactor(1);
                 }
         }
 
@@ -98,6 +98,15 @@ public final class Configs {
                                         .idleMode(IdleMode.kBrake)
                                         .inverted(Constants.ClimberConstants.kMotorInverted)
                                         .smartCurrentLimit(Constants.ClimberConstants.kMotorCurrentLimit);
+                        motorConfig.encoder
+                                        .positionConversionFactor(1)
+                                        .velocityConversionFactor(1);
+                        motorConfig.closedLoop
+                                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                        .pid(Constants.ClimberConstants.kClimberP,
+                                                        Constants.ClimberConstants.kClimberI,
+                                                        Constants.ClimberConstants.kClimberD)
+                                        .outputRange(-1, 1);
                 }
         }
 

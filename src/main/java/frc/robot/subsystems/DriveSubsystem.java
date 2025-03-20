@@ -177,7 +177,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     if (mt2 == null) {
       doRejectUpdate = true;
-      System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
+      //System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
     } else {
       if (Math.abs(m_gyro.getRate()) > 720) {
         doRejectUpdate = true;
@@ -192,8 +192,8 @@ public class DriveSubsystem extends SubsystemBase {
       Matrix<N3, N1> cprStdDevs = MEASUREMENT_STD_DEV_DISTANCE_MAP.get(mt2.avgTagDist);
       m_poseEstimator.setVisionMeasurementStdDevs(cprStdDevs);
       m_poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
     }
-    arrayPublisher.set(new Pose2d[] {m_poseEstimator.getEstimatedPosition(), mt2.pose});
   }
 
   /**

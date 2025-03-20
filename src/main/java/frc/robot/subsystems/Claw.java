@@ -24,15 +24,23 @@ public class Claw extends SubsystemBase {
 
   /** Creates a new Outake. */
   public Claw() {
-    m_motor = new SparkMax(Constants.ClawConstants.kMotorCANid, Constants.ClawConstants.kMotorType);
-    m_motor.configure(Configs.Claw.motorConfig,
+    m_right = new SparkMax(Constants.ClawConstants.kRightCANid, Constants.ClawConstants.kRightMotorType);
+    m_right.configure(Configs.Claw.rightConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+
+    m_left = new SparkMax(Constants.ClawConstants.kLeftCANid, Constants.ClawConstants.kLeftMotorType);
+    m_left.configure(Configs.Claw.leftConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
   }
 
   public void setVoltage(double speed) {
     m_right.setVoltage(speed);
+    m_left.setVoltage(speed);
   }
+  
+
 
   @Override
   public void periodic() {

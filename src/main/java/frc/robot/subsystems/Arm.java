@@ -20,7 +20,7 @@ public class Arm extends SubsystemBase {
   private SparkMax m_motor;
   private SparkAbsoluteEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
-  private double position;
+  private double position = .6;
   private Lift m_lift;
 
   /** Creates a new Wrist. */
@@ -40,7 +40,6 @@ public class Arm extends SubsystemBase {
   }
 
   public void setPosition(double position) {
-    if (m_lift.isInPostion())
       this.position = position;
   }
 

@@ -29,7 +29,7 @@ public class AutoStopIntake extends SequentialCommandGroup {
         new RunCommand(
             () -> m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts),
             m_intake)
-            .withTimeout(.15),
+            .withTimeout(.3),
         Commands.runOnce(
             () -> {
               m_fourbar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting);

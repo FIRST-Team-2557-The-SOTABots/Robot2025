@@ -94,13 +94,13 @@ public final class Constants {
 
     public static final int kCurrentLimit = 50;
 
-    public static final double kFourBarP = 1.5;
+    public static final double kFourBarP = 3;
     public static final double kFourBarI = 0.0;
     public static final double kFourBarD = 0.0;
 
     public final class FourBarPostion {
       public static final double kPositionResting = 0.31;
-      public static final double kPositionCoral = 0.59;
+      public static final double kPositionCoral = 0.6;
       public static final double kPositionClimb = 0.45;
       public static final double kPositionL1 = .4;
     }

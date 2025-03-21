@@ -8,8 +8,11 @@ import frc.robot.subsystems.DriveSubsystem;
 import java.util.Map;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -18,16 +21,21 @@ public class MoveToCoral extends Command {
   private PIDController mTurn;
   private PIDController mfwd;
   private PIDController mside;
+    private ProfiledPIDController m_PID;
 
 
   /** Creates a new AprilTag. */
   public MoveToCoral(DriveSubsystem drive) {
     this.mDrive = drive;
+    
     PIDController fwd = new PIDController(.05, .0, .1);
     this.mfwd = fwd;
 
     PIDController turn = new PIDController(.01, 0.0, 0.0);
     this.mTurn = turn;
+
+    m_PID = new ProfiledPIDController(.025,0,0,
+        new TrapezoidProfile.Constraints(.5, .1));
 
     addRequirements(mDrive);
   }
@@ -66,7 +74,7 @@ public class MoveToCoral extends Command {
   public void execute() {
     mDrive.drive(
       // mfwd.calculate(-correctedTY(), -4),
-      .1,
+      -m_PID.calculate(correctedTY(),-5),
       0,
       mTurn.calculate(correctedTX(),0),
       false);

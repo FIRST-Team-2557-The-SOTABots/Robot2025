@@ -59,9 +59,9 @@ public class RobotContainer {
     private final DriveSubsystem m_robotDrive = new DriveSubsystem();
     private final Intake m_intake = new Intake();
     private final FourBar m_fourBar = new FourBar();
-    private final Lift m_lift = new Lift();
-    private final Arm m_arm = new Arm(m_lift);
-    private final Claw m_claw = new Claw();
+    //private final Lift m_lift = new Lift();
+    //private final Arm m_arm = new Arm(m_lift);
+    //private final Claw m_claw = new Claw();
     // private final Outake m_outake = new Outake();
     private final Climber m_climber = new Climber();
     private final SendableChooser<Command> autoChooser;
@@ -151,6 +151,8 @@ public class RobotContainer {
                 m_intake));
 
         NamedCommands.registerCommand("AutoIntake", new AutoStopIntake(m_fourBar, m_intake));
+
+        NamedCommands.registerCommand("MoveToCoral", new MoveToCoral(m_robotDrive).until(m_intake::hasCoral));
     }
 
     /**
@@ -201,19 +203,19 @@ public class RobotContainer {
 
         // l4 l3 l2 auto go up and down
 
-        m_manipulatorController.y().onTrue(new LiftAndArmMove(m_lift, m_arm,
-                Constants.LiftConstants.LiftHeight.kPositionBarge,
-                Constants.ArmConstants.ArmPostion.kPosistionBarge))
-                .onFalse(new LiftAndArmMove(m_lift, m_arm,
-                        Constants.LiftConstants.LiftHeight.kPositionResting,
-                        Constants.ArmConstants.ArmPostion.kPositionResting));
+        // m_manipulatorController.y().onTrue(new LiftAndArmMove(m_lift, m_arm,
+        //         Constants.LiftConstants.LiftHeight.kPositionBarge,
+        //         Constants.ArmConstants.ArmPostion.kPosistionBarge))
+        //         .onFalse(new LiftAndArmMove(m_lift, m_arm,
+        //                 Constants.LiftConstants.LiftHeight.kPositionResting,
+        //                 Constants.ArmConstants.ArmPostion.kPositionResting));
 
-        m_manipulatorController.a().onTrue(new LiftAndArmMove(m_lift, m_arm,
-                Constants.LiftConstants.LiftHeight.kPositionGroundPickup,
-                Constants.ArmConstants.ArmPostion.kPositionGround))
-                .onFalse(new LiftAndArmMove(m_lift, m_arm,
-                        Constants.LiftConstants.LiftHeight.kPositionResting,
-                        Constants.ArmConstants.ArmPostion.kPositionResting));
+        // m_manipulatorController.a().onTrue(new LiftAndArmMove(m_lift, m_arm,
+        //         Constants.LiftConstants.LiftHeight.kPositionGroundPickup,
+        //         Constants.ArmConstants.ArmPostion.kPositionGround))
+        //         .onFalse(new LiftAndArmMove(m_lift, m_arm,
+        //                 Constants.LiftConstants.LiftHeight.kPositionResting,
+        //                 Constants.ArmConstants.ArmPostion.kPositionResting));
 
         // m_manipulatorController.a().onTrue(new LiftAndWristMove(m_lift, m_wrist,
         // Constants.LiftConstants.LiftHeight.kPositionL2,
@@ -230,29 +232,29 @@ public class RobotContainer {
         // Constants.LiftConstants.LiftHeight.kPositionResting,
         // Constants.WristConstants.WristPostion.kPositionResting));
 
-        m_manipulatorController.rightBumper().onTrue(new RunCommand(
-                () -> {
-                    m_claw.setVoltage(
-                            Constants.ClawConstants.kIntakeVolts);
-                },
-                m_claw))
-                .onFalse(new RunCommand(
-                        () -> {
-                            m_claw.setVoltage(0);
-                        },
-                        m_claw));
+        // m_manipulatorController.rightBumper().onTrue(new RunCommand(
+        //         () -> {
+        //             m_claw.setVoltage(
+        //                     Constants.ClawConstants.kIntakeVolts);
+        //         },
+        //         m_claw))
+        //         .onFalse(new RunCommand(
+        //                 () -> {
+        //                     m_claw.setVoltage(0);
+        //                 },
+        //                 m_claw));
 
-        m_manipulatorController.leftBumper().onTrue(new RunCommand(
-                () -> {
-                    m_claw.setVoltage(
-                            Constants.ClawConstants.kOutakeVolts);
-                },
-                m_claw))
-                .onFalse(new RunCommand(
-                        () -> {
-                            m_claw.setVoltage(0);
-                        },
-                        m_claw));
+        // m_manipulatorController.leftBumper().onTrue(new RunCommand(
+        //         () -> {
+        //             m_claw.setVoltage(
+        //                     Constants.ClawConstants.kOutakeVolts);
+        //         },
+        //         m_claw))
+        //         .onFalse(new RunCommand(
+        //                 () -> {
+        //                     m_claw.setVoltage(0);
+        //                 },
+        //                 m_claw));
 
         // move the delivery to the outake for emergencys
         // m_manipulatorController.rightBumper().onTrue(new RunCommand(
@@ -268,26 +270,28 @@ public class RobotContainer {
         // },
         // m_intake));
 
-        // m_manipulatorController.leftBumper().onTrue(new RunCommand(
-        // () -> {
-        // m_intake.setVoltage(
-        // -Constants.IntakeConstants.kIntakeVolts,
-        // -Constants.IntakeConstants.kDeliveryVolts);
-        // },
-        // m_intake))
-        // .onFalse(new RunCommand(
-        // () -> {
-        // m_intake.setVoltage(0, 0);
-        // },
-        // m_intake));
+        m_manipulatorController.rightBumper().onTrue(new RunCommand(
+                () -> m_fourBar.setPostion(
+                        Constants.FourBarConstants.FourBarPostion.kPositionL1), 
+                m_fourBar)).onFalse(new RunCommand(() -> m_fourBar.setPostion(
+                        Constants.FourBarConstants.FourBarPostion.kPositionL1), 
+                m_fourBar));
 
-        m_manipulatorController.b().onTrue(new AutoStopIntake(
+        m_manipulatorController.leftBumper().onTrue(new RunCommand(
+                () -> m_intake.setVoltage(
+                        -Constants.IntakeConstants.kIntakeVolts),
+                m_intake))
+                .onFalse(new RunCommand(
+                        () ->m_intake.setVoltage(0),
+                m_intake));
+
+        m_manipulatorController.a().onTrue(new AutoStopIntake(
                 m_fourBar, m_intake))
                 .onFalse(Commands.runOnce(
                         () -> m_intake.setVoltage(0),
                         m_intake));
 
-        m_manipulatorController.rightStick().onTrue(new MoveToCoral(m_robotDrive))
+        m_manipulatorController.leftStick().onTrue(new MoveToCoral(m_robotDrive))
                 .onFalse(new MoveToCoral(m_robotDrive).withTimeout(.001));
 
         // m_manipulatorController.leftStick().onTrue(new RunCommand(

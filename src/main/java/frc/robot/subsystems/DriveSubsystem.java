@@ -170,8 +170,8 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
     // Check if Limelight target is valid
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-coral");
-    LimelightHelpers.SetRobotOrientation("limelight-coral", getHeading(),
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-algea");
+    LimelightHelpers.SetRobotOrientation("limelight-algea", getHeading(),
         0, 0, 0, 0, 0);
     boolean doRejectUpdate = false;
 

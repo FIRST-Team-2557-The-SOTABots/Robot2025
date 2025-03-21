@@ -50,6 +50,8 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.estimator.PoseEstimator;
 
 public class DriveSubsystem extends SubsystemBase {
+
+  private final Vision m_vision = new Vision();
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -132,15 +134,18 @@ public class DriveSubsystem extends SubsystemBase {
           // alliance
           // This will flip the path being followed to the red side of the field.
           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
           return false;
         },
         this // Reference to this subsystem to set requirements
     );
+  }
+
+  public double getLimelightHeading(){
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+      return getHeading() + -180;
+    }else{
+      return getHeading();
+    }
   }
 
   public ChassisSpeeds getDriveOdom() {
@@ -170,14 +175,15 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
     // Check if Limelight target is valid
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-algea");
-    LimelightHelpers.SetRobotOrientation("limelight-algea", getHeading(),
+    
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-algae");
+    LimelightHelpers.SetRobotOrientation("limelight-algae", getLimelightHeading(),
         0, 0, 0, 0, 0);
     boolean doRejectUpdate = false;
 
     if (mt2 == null) {
       doRejectUpdate = true;
-      //System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
+      System.out.println("mt2 is null"); // If mt2 is null, reject the vision update
     } else {
       if (Math.abs(m_gyro.getRate()) > 720) {
         doRejectUpdate = true;
@@ -251,8 +257,16 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drivePathplanner(ChassisSpeeds chassisSpeeds) {
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+    SwerveModuleState[] swerveModuleStates;
+    if (m_vision.getHijack()){
+      swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        m_vision.getAutoPickupCoral());
+    } else {
+      swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         chassisSpeeds);
+    }
+
+
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);

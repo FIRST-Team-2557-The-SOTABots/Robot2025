@@ -33,7 +33,7 @@ public class AutoStopIntake extends SequentialCommandGroup {
         Commands.runOnce(
             () -> {
               m_fourbar.setPostion(Constants.FourBarConstants.FourBarPostion.kPositionResting);
-              m_intake.setVoltage(0);
+              m_intake.setVoltage(2);
             },
             m_intake, m_fourbar));
     addRequirements(m_fourbar, m_intake);

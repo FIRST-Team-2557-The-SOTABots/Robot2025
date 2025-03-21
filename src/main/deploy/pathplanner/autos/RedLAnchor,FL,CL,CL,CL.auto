@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueMiddleToReef"
+            "pathName": "RedAnchorToReefFarLeft"
           }
         },
         {
@@ -15,15 +15,40 @@
           "data": {
             "commands": [
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "Outake"
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.001
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FourBarRest"
                 }
               }
             ]
@@ -32,13 +57,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueFarMiddleReefToAICoralRight"
+            "pathName": "RedReefFarLeftToStationFarLeft"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueRightCycleToReefCloseMiddle"
+            "pathName": "RedStationFarLeftToReefCloseLeft"
           }
         },
         {
@@ -46,15 +71,40 @@
           "data": {
             "commands": [
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "Outake"
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.001
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FourBarRest"
                 }
               }
             ]
@@ -63,13 +113,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueReefCloseMiddleToAICoralRight"
+            "pathName": "RedReefCloseLeftStationLeftMiddle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueRightCycleToReefCloseRight"
+            "pathName": "RedStationLeftMidToReefCloseLeft"
           }
         },
         {
@@ -77,15 +127,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Outake"
+                  "waitTime": 0.25
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 0.5
+                  "name": "Outake"
                 }
               }
             ]
@@ -94,13 +144,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueReefCloseRightToAICoralRight"
+            "pathName": "RedReefCloseLeftStationLeftMiddle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueRightCycleToReefCloseRight"
+            "pathName": "RedStationLeftMidToReefCloseLeft"
           }
         },
         {
@@ -108,15 +158,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Outake"
+                  "waitTime": 0.25
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 0.5
+                  "name": "Outake"
                 }
               }
             ]

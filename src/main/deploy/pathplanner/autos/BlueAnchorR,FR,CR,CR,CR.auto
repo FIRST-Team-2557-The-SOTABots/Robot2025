@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueRAnchorToReefFarRight"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueReefFarRightToStationFarRight"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueStationFarRightToReefCloseRight"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueReefCloseRightToStationRightMid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueStationRightMidToReefCloseRight"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueReefCloseRightToStationRightMid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueStationRightMidToReefCloseRight"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

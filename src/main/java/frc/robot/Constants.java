@@ -100,9 +100,10 @@ public final class Constants {
 
     public final class FourBarPostion {
       public static final double kPositionResting = 0.31;
+      public static final double kPositionAlgae = 0.5;
       public static final double kPositionCoral = 0.6;
       public static final double kPositionClimb = 0.45;
-      public static final double kPositionL1 = .4;
+      public static final double kPositionL1 = .38;
     }
 
   }
@@ -134,7 +135,7 @@ public final class Constants {
     public static final int kIntakeCurrentLimit = 50;
 
     public static final double kIntakeVolts = 10;
-    public static final double kOutakeVolts = 10;
+    public static final double kOutakeVolts = 4.5;
   }
 
   public static final class ClimberConstants {

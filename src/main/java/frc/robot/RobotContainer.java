@@ -311,8 +311,10 @@ public class RobotContainer {
                                                 Constants.FourBarConstants.FourBarPostion.kPositionCoral);
                                         m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts);},
                                 m_fourBar, m_intake)).onFalse(new RunCommand(
-                                        () -> m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts),
-                                        m_intake).withTimeout(.4).andThen(new RunCommand(
+                                        () -> {m_fourBar.setPostion(
+                                                Constants.FourBarConstants.FourBarPostion.kPositionResting);
+                                        m_intake.setVoltage(Constants.IntakeConstants.kIntakeVolts);},
+                                        m_fourBar, m_intake).withTimeout(.4).andThen(new RunCommand(
                                                 () -> {m_fourBar.setPostion(
                                                         Constants.FourBarConstants.FourBarPostion.kPositionResting);
                                                 m_intake.setVoltage(0);},

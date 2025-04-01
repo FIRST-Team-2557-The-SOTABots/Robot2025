@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 2.01825,
-        "y": 7.184
+        "y": 6.94025
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4463989008221945,
-        "y": 6.1248394696396975
+        "x": 2.446398900822194,
+        "y": 5.881089469639697
       },
       "isLocked": false,
       "linkedName": null
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "FourBarL1",
-      "waypointRelativePos": 0.1578163771712151,
+      "waypointRelativePos": 0.22687373396353544,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

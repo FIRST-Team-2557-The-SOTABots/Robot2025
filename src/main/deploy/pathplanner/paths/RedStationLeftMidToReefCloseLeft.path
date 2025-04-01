@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 15.492750000000001,
-        "y": 0.9439999999999997
+        "x": 15.41475,
+        "y": 1.060999999999999
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.166304517341224,
-        "y": 1.982194884675196
+        "x": 15.088304517341223,
+        "y": 2.0991948846751955
       },
       "isLocked": false,
       "linkedName": null
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "FourBarL1",
-      "waypointRelativePos": 0.061538461538461375,
+      "waypointRelativePos": 0.19446320054017532,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -60,7 +60,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 24.676863170337032
+    "rotation": 24.676863170337036
   },
   "useDefaultConstraints": true
 }

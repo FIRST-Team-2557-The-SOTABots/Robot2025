@@ -42,16 +42,15 @@ public final class Constants {
     public static final double kLiftLowP = .5;
     public static final double kLiftI = .5;
     public static final double kLiftD = 0.0;
-    public static final double kLiftMaxSpeed = 100;
-    public static final double kLiftMaxAcceleration = 10;
+    public static final double kLiftMaxSpeed = 150;
+    public static final double kLiftMaxAcceleration = 60;
 
     public final class LiftHeight {
       public static final double kPositionResting = -.1;
-      public static final double kPositionL1 = 20;
-      public static final double kPositionL2 = 48;
-      public static final double kPositionBarge = 104;
-      public static final double kPositionHolding = 28;
-      public static final double kPositionGroundPickup = 30;
+      public static final double kPositionL2 = 73;
+      public static final double kPositionHolding = 50;
+      public static final double kPositionL3 = 105;
+      public static final double kPositionBarge = 110;
     }
 
     public static final double kZeroSpeed = 0.01;
@@ -64,23 +63,24 @@ public final class Constants {
 
     public static final MotorType kMotorType = MotorType.kBrushless;
 
-    public static final boolean kInverted = false;
+    public static final boolean kInverted = true;
 
     public static final int kCurrentLimit = 50;
 
     public static final boolean kEncoderInverted = true;
 
-    public static final double kArmP = 3;
+    public static final double kArmP = 25;
+    public static final double kArmLP = 5;
     public static final double kArmI = 0.0;
     public static final double kArmD = 0.0;
 
     public final class ArmPostion {
-      public static final double kPositionResting = 0.6;
-      public static final double kPositionAlgaeResting = 0.5;
-      public static final double kPositionGround = 0.3;
-      public static final double kPositionL2 = 0.5;
-      public static final double kPosistionL3 = 0.5;
-      public static final double kPosistionBarge = 0.5;
+      public static final double kPositionResting = 0.2;
+      public static final double kPositionGround = 0.435;
+      public static final double kPositionL2 = 0.475;
+      public static final double kPosistionL3 = 0.475;
+      public static final double kPosistionProcesser = 0.35;
+      public static final double kPosistionBarge = 0.225;
     }
 
   }
@@ -93,7 +93,7 @@ public final class Constants {
     public static final boolean kInverted = true;
 
     public static final int kCurrentLimit = 50;
-
+  
     public static final double kFourBarP = 3;
     public static final double kFourBarI = 0.0;
     public static final double kFourBarD = 0.0;
@@ -103,7 +103,7 @@ public final class Constants {
       public static final double kPositionAlgae = 0.5;
       public static final double kPositionCoral = 0.6;
       public static final double kPositionClimb = 0.45;
-      public static final double kPositionL1 = .38;
+      public static final double kPositionL1 = .4;
     }
 
   }
@@ -118,8 +118,8 @@ public final class Constants {
     public static final boolean kRightInverted = false;
     public static final boolean kLeftInverted = true;
 
-    public static final int kRightCurrentLimit = 30;
-    public static final int kLeftCurrentLimit = 30;
+    public static final int kRightCurrentLimit = 50;
+    public static final int kLeftCurrentLimit = 50;
 
     public static final double kOutakeVolts = -12;
     public static final double kIntakeVolts = 7;
@@ -135,7 +135,7 @@ public final class Constants {
     public static final int kIntakeCurrentLimit = 50;
 
     public static final double kIntakeVolts = 10;
-    public static final double kOutakeVolts = 4.5;
+    public static final double kOutakeVolts = 5;
   }
 
   public static final class ClimberConstants {

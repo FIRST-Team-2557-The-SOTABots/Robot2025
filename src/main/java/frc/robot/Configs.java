@@ -82,6 +82,7 @@ public final class Configs {
                                         .positionConversionFactor(1)
                                         .velocityConversionFactor(1);
                         motorConfig.closedLoop
+                                        .iZone(.2)
                                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                                         .pid(Constants.ArmConstants.kArmP,
                                                         Constants.ArmConstants.kArmI,

@@ -90,13 +90,17 @@ public class Lift extends SubsystemBase {
     m_right.getEncoder().setPosition(0);
   }
 
+  public double getPosition(){
+    return (m_right.getEncoder().getPosition() + m_left.getEncoder().getPosition())/2;
+  }
+
   @Override
   public void periodic() {
     setVoltage(MathUtil.clamp(m_PID.calculate(m_right.getEncoder().getPosition(), position), -12, 12));
 
-    SmartDashboard.putNumber("lift PID", m_PID.calculate(m_right.getEncoder().getPosition(), position));
+    SmartDashboard.putNumber("lift PID", m_PID.calculate(getPosition(), position));
     SmartDashboard.putNumber("lift setpoint", position);
-    SmartDashboard.putNumber("lift postion", m_right.getEncoder().getPosition());
+    SmartDashboard.putNumber("lift postion", getPosition());
     // SmartDashboard.putNumber("lift MP", m_right.GET());
     //SmartDashboard.putNumber("lift P", m_PID.getP());
     //SmartDashboard.putNumber("period", m_PID.getPeriod());

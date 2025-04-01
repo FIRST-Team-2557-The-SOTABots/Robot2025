@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "FourBarL1",
-      "waypointRelativePos": 0.07642679900744119,
+      "waypointRelativePos": 0.21935483870967387,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

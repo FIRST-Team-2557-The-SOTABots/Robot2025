@@ -11,15 +11,66 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "FourBarL1"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "FourBarL1"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Outake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Outake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "FourBarRest"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopIntake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
           }
         }
       ]

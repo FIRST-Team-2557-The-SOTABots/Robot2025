@@ -12,6 +12,8 @@ import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
@@ -20,6 +22,7 @@ public class Arm extends SubsystemBase {
   private SparkMax m_motor;
   private SparkAbsoluteEncoder m_motorEncoder;
   private SparkClosedLoopController m_motorPID;
+  private PIDController m_PID;
   private double position = .6;
   private Lift m_lift;
 
@@ -32,7 +35,9 @@ public class Arm extends SubsystemBase {
         PersistMode.kPersistParameters);
 
     m_motorEncoder = m_motor.getAbsoluteEncoder();
-    m_motorPID = m_motor.getClosedLoopController();
+    m_PID = new PIDController(Constants.ArmConstants.kArmP,
+     Constants.ArmConstants.kArmI,
+      Constants.ArmConstants.kArmD);
   }
 
   public void setSpeed(double speed) {
@@ -41,12 +46,21 @@ public class Arm extends SubsystemBase {
 
   public void setPosition(double position) {
       this.position = position;
+
+      if (m_motorEncoder.getPosition() < .3){
+        m_PID.setP(Constants.ArmConstants.kArmLP);
+      } else {
+        m_PID.setP(Constants.ArmConstants.kArmP);
+      }
   }
 
 
   @Override
   public void periodic() {
-    m_motorPID.setReference(position, ControlType.kPosition);
+    if (m_motorEncoder.getPosition() < .3){
+      m_PID.setP(Constants.ArmConstants.kArmLP);
+    }
+    setSpeed(MathUtil.clamp(m_PID.calculate(m_motorEncoder.getPosition(), position), -1, 1));
     // This method will be called once per scheduler run
   }
 }

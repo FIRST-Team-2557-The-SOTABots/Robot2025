@@ -21,7 +21,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.15
                       }
                     },
                     {
@@ -78,7 +78,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.15
                       }
                     },
                     {
@@ -135,7 +135,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.15
                       }
                     },
                     {
@@ -159,33 +159,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueStationRightMidToReefCloseRight"
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.25
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Outake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "BlueStationRightMidToReefCloseRightNoL1"
           }
         }
       ]

@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
@@ -26,6 +27,11 @@ public class Climber extends SubsystemBase {
   }
 
   public void setVoltage(double voltage) {
+    // if(m_motor.getEncoder().getPosition() < 5){
+    //   m_motor.setVoltage(-3);
+    // }else if(m_motor.getEncoder().getPosition() < -200){
+    //   m_motor.setVoltage(3);
+    // }
       m_motor.setVoltage(voltage);
   }
 
@@ -35,6 +41,7 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("climber postion", m_motor.getEncoder().getPosition());
     // This method will be called once per scheduler run
   }
 }

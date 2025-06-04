@@ -69,18 +69,18 @@ public final class Constants {
 
     public static final boolean kEncoderInverted = true;
 
-    public static final double kArmP = 25;
-    public static final double kArmLP = 5;
+    public static final double kArmP = .5;
+    //public static final double kArmLP = 5;
     public static final double kArmI = 0.0;
     public static final double kArmD = 0.0;
 
     public final class ArmPostion {
-      public static final double kPositionResting = 0.2;
-      public static final double kPositionGround = 0.435;
-      public static final double kPositionL2 = 0.475;
-      public static final double kPosistionL3 = 0.475;
-      public static final double kPosistionProcesser = 0.35;
-      public static final double kPosistionBarge = 0.225;
+      public static final double kPositionResting = 0.225;
+      public static final double kPositionGround = 0.445;
+      public static final double kPositionL2 = 0.49;
+      public static final double kPosistionL3 = 0.49;
+      public static final double kPosistionProcesser = 0.38;
+      public static final double kPosistionBarge = 0.3;
     }
 
   }

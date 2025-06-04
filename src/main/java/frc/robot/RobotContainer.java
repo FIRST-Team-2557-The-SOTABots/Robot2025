@@ -190,6 +190,11 @@ public class RobotContainer {
                                                 Constants.IntakeConstants.kIntakeVolts),
                                 m_intake));
 
+                                NamedCommands.registerCommand("StopClaw", Commands.run(
+                                        () -> m_claw.setVoltage(
+                                                        0),
+                                        m_claw));
+
                 NamedCommands.registerCommand("StopIntake", Commands.run(
                                 () -> m_intake.setVoltage(0),
                                 m_intake));
@@ -259,10 +264,10 @@ public class RobotContainer {
                 //arm score algea
                 m_manipulatorController.leftStick().onTrue(new LiftAndArmMove(m_lift, m_arm,
                                 Constants.LiftConstants.LiftHeight.kPositionHolding,
-                                Constants.ArmConstants.ArmPostion.kPositionResting))
+                                Constants.ArmConstants.ArmPostion.kPosistionBarge))
                                 .onFalse(new LiftAndArmMove(m_lift, m_arm,
                                 Constants.LiftConstants.LiftHeight.kPositionHolding,
-                                Constants.ArmConstants.ArmPostion.kPositionResting));
+                                Constants.ArmConstants.ArmPostion.kPosistionBarge));
 
                 // arm pickup algea l3
                 m_manipulatorController.povRight().onTrue(new LiftAndArmMove(m_lift, m_arm,

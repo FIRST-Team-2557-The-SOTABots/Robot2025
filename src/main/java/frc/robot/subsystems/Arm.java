@@ -14,6 +14,7 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants;
@@ -33,11 +34,13 @@ public class Arm extends SubsystemBase {
     m_motor.configure(Configs.Arm.motorConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
+    
+        m_motorPID = m_motor.getClosedLoopController();
 
     m_motorEncoder = m_motor.getAbsoluteEncoder();
-    m_PID = new PIDController(Constants.ArmConstants.kArmP,
-     Constants.ArmConstants.kArmI,
-      Constants.ArmConstants.kArmD);
+    // m_PID = new PIDController(Constants.ArmConstants.kArmP,
+    //  Constants.ArmConstants.kArmI,
+    //   Constants.ArmConstants.kArmD);
   }
 
   public void setSpeed(double speed) {
@@ -47,20 +50,22 @@ public class Arm extends SubsystemBase {
   public void setPosition(double position) {
       this.position = position;
 
-      if (m_motorEncoder.getPosition() < .3){
-        m_PID.setP(Constants.ArmConstants.kArmLP);
-      } else {
-        m_PID.setP(Constants.ArmConstants.kArmP);
-      }
+      // if (m_motorEncoder.getPosition() < .3){
+      //   m_PID.setP(Constants.ArmConstants.kArmLP);
+      // } else {
+      //   m_PID.setP(Constants.ArmConstants.kArmP);
+      // }
   }
 
 
   @Override
   public void periodic() {
-    if (m_motorEncoder.getPosition() < .3){
-      m_PID.setP(Constants.ArmConstants.kArmLP);
-    }
-    setSpeed(MathUtil.clamp(m_PID.calculate(m_motorEncoder.getPosition(), position), -1, 1));
+    SmartDashboard.putNumber("armABS", m_motorEncoder.getPosition());
+    m_motorPID.setReference((position - .201) * 316.25, ControlType.kPosition);
+    // if (m_motorEncoder.getPosition() < .3){
+    //   m_PID.setP(Constants.ArmConstants.kArmLP);
+    // }
+    // setSpeed(MathUtil.clamp(m_PID.calculate(m_motorEncoder.getPosition(), position), -1, 1));
     // This method will be called once per scheduler run
   }
 }

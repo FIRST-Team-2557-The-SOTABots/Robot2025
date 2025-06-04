@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 11.427,
-        "y": 4.1225
+        "x": 11.56813524590164,
+        "y": 4.072950819672131
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.0035,
-        "y": 3.8689999999999993
+        "x": 10.144635245901641,
+        "y": 3.8194508196721304
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 10.44225,
-        "y": 1.9189999999999998
+        "x": 10.297438524590163,
+        "y": 2.142930327868853
       },
       "prevControl": {
-        "x": 11.39775,
-        "y": 1.8604999999999996
+        "x": 11.252938524590164,
+        "y": 2.0844303278688527
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,19 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "StopClaw",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopClaw"
+        }
+      }
+    },
+    {
       "name": "Barge",
-      "waypointRelativePos": 0.7205955334987602,
+      "waypointRelativePos": 0.5293720459149202,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -60,7 +71,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.6070640478617
+    "rotation": 178.60706404786174
   },
   "useDefaultConstraints": false
 }
